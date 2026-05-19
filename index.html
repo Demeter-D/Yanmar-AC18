@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0e110d" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="AC-18" />
+<title>Yanmar AC-18 — Field Service Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e110d;
+    --panel: #161a14;
+    --panel-2: #1d211a;
+    --panel-3: #262b22;
+    --text: #e6e9dc;
+    --text-2: #b1b6a8;
+    --text-3: #6a6e64;
+    --rule: #2a2e26;
+    --rule-2: #383d33;
+    --hi: #f4d20a;
+    --hi-soft: #6a5b09;
+    --teal: #5db3a3;
+    --danger: #d4502b;
+    --good: #6db04e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: "Archivo", system-ui, sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+  body { min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
+  body.no-scroll { overflow: hidden; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .black { font-family: "Archivo Black", "Archivo", sans-serif; font-weight: 900; letter-spacing: -0.01em; }
+  ::selection { background: var(--hi); color: #0e110d; }
+
+  /* Hazard stripe pattern */
+  .hazard {
+    background-image: repeating-linear-gradient(135deg,
+      var(--hi) 0 16px, var(--hi) 16px 16px,
+      #0e110d 16px 32px);
+    height: 8px;
+  }
+  .hazard-sm { height: 4px; background-image: repeating-linear-gradient(135deg, var(--hi) 0 8px, #0e110d 8px 16px); }
+
+  /* Track tread pattern (decorative dividers) */
+  .tread {
+    height: 18px;
+    background-image: repeating-linear-gradient(90deg,
+      transparent 0 4px,
+      var(--rule) 4px 24px,
+      transparent 24px 28px);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    opacity: 0.6;
+  }
+
+  /* App shell */
+  .app { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; min-height: 100dvh; }
+
+  /* Sidebar (desktop) */
+  .rail {
+    background: #0a0c09; color: var(--text); padding: 24px 22px;
+    position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 22px;
+    border-right: 1px solid var(--rule);
+  }
+  .brand { padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
+  .brand-line { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .brand-pill { font-family: "JetBrains Mono", monospace; font-size: 10px; padding: 4px 8px; background: var(--hi); color: #0e110d; letter-spacing: 0.16em; font-weight: 700; }
+  .brand-pill.alt { background: transparent; color: var(--text-3); border: 1px solid var(--rule-2); }
+  .brand-title { font-family: "Archivo Black"; font-size: 36px; line-height: 0.9; letter-spacing: -0.02em; margin: 0; }
+  .brand-title .dot { color: var(--hi); }
+  .brand-sub { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); margin-top: 8px; line-height: 1.5; letter-spacing: 0.04em; }
+
+  .nav { display: flex; flex-direction: column; gap: 1px; }
+  .nav-group { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.22em; color: var(--text-3); padding: 14px 0 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 12px; border: none; background: transparent; color: var(--text-2); text-align: left;
+    font-family: inherit; font-size: 14px; cursor: pointer; min-height: 44px;
+    transition: all 120ms ease; border-left: 3px solid transparent;
+  }
+  .nav-item .num { font-family: "Archivo Black"; font-size: 16px; color: var(--text-3); min-width: 24px; }
+  .nav-item:hover { background: var(--panel); color: var(--text); }
+  .nav-item.active { background: var(--panel); color: var(--text); border-left-color: var(--hi); }
+  .nav-item.active .num { color: var(--hi); }
+
+  .rail-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--rule); font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text-3); line-height: 1.7; letter-spacing: 0.04em; }
+
+  /* Mobile topbar */
+  .topbar { display: none; }
+  .scrim { display: none; }
+  @media (max-width: 880px) {
+    .app { grid-template-columns: 1fr; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      position: sticky; top: 0; z-index: 40;
+      background: #0a0c09; color: var(--text);
+      padding: calc(env(safe-area-inset-top, 0) + 12px) 16px 0;
+      padding-left: calc(env(safe-area-inset-left, 0) + 16px);
+      padding-right: calc(env(safe-area-inset-right, 0) + 16px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding-bottom: 12px; }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .topbar-mark { font-family: "Archivo Black"; font-size: 22px; line-height: 1; letter-spacing: -0.02em; }
+    .topbar-mark .dot { color: var(--hi); }
+    .topbar-meta { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.14em; line-height: 1.4; }
+    .topbar-meta strong { display: block; color: var(--text); font-family: "Archivo", sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; margin-top: 2px; }
+    .topbar-active { text-align: right; max-width: 50%; font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.12em; }
+    .topbar-active strong { display: block; color: var(--hi); font-family: "Archivo", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0; margin-top: 2px; }
+    .menu-btn {
+      background: transparent; border: 1px solid var(--rule-2); color: var(--text);
+      width: 44px; height: 44px; display: grid; place-items: center; cursor: pointer; padding: 0;
+      font-family: inherit; flex-shrink: 0;
+    }
+    .menu-btn:active { background: var(--panel); }
+    .menu-btn svg { width: 20px; height: 20px; }
+    .topbar-hazard { width: 100%; }
+
+    .rail {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 86vw; max-width: 340px; height: 100vh; height: 100dvh;
+      z-index: 60; transform: translateX(-100%); transition: transform 240ms ease;
+      padding: calc(env(safe-area-inset-top, 0) + 22px) 22px calc(env(safe-area-inset-bottom, 0) + 22px);
+      padding-left: calc(env(safe-area-inset-left, 0) + 22px);
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+    .rail.open { transform: translateX(0); }
+    .scrim {
+      display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50;
+      opacity: 0; pointer-events: none; transition: opacity 240ms ease;
+    }
+    .scrim.show { opacity: 1; pointer-events: auto; }
+    .rail-close {
+      align-self: flex-end; background: transparent; border: 1px solid var(--rule-2); color: var(--text);
+      width: 36px; height: 36px; cursor: pointer; padding: 0; display: grid; place-items: center; margin-top: -8px;
+    }
+  }
+  @media (min-width: 881px) { .rail-close { display: none; } }
+
+  /* Main */
+  main { padding: 0; min-width: 0; }
+  .doc { max-width: 1000px; margin: 0 auto; padding: 36px 48px 120px; }
+  @media (max-width: 880px) {
+    .doc { padding: 24px 18px 80px;
+      padding-left: calc(env(safe-area-inset-left, 0) + 18px);
+      padding-right: calc(env(safe-area-inset-right, 0) + 18px);
+    }
+  }
+
+  /* Section marker */
+  .sec-marker { display: flex; align-items: stretch; gap: 18px; margin: 0 0 24px; padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
+  .sec-marker-num {
+    font-family: "Archivo Black"; font-size: 96px; line-height: 0.85; color: var(--hi);
+    letter-spacing: -0.04em; padding-right: 4px;
+  }
+  @media (max-width: 540px) { .sec-marker-num { font-size: 64px; } }
+  .sec-marker-body { display: flex; flex-direction: column; justify-content: flex-end; flex: 1; min-width: 0; }
+  .sec-marker-tag { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.22em; color: var(--text-3); margin-bottom: 6px; }
+  .sec-marker-title { font-family: "Archivo Black"; font-size: clamp(24px, 5.5vw, 38px); line-height: 1; letter-spacing: -0.02em; margin: 0; text-transform: uppercase; }
+  .sec-lede { font-size: clamp(15px, 4vw, 17px); color: var(--text-2); line-height: 1.55; max-width: 64ch; margin: 8px 0 36px; }
+
+  h3 { font-family: "Archivo Black"; font-size: clamp(18px, 5vw, 22px); margin: 44px 0 16px; text-transform: uppercase; letter-spacing: -0.005em; }
+  h3.with-tag { display: flex; align-items: baseline; gap: 12px; }
+  h3 .tag { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.18em; font-weight: 400; text-transform: none; }
+  h4 { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-3); margin: 28px 0 12px; }
+  p { line-height: 1.6; color: var(--text-2); margin: 0 0 14px; }
+
+  /* Cards & boxes */
+  .grid { display: grid; gap: 12px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 720px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Stat tile */
+  .stat { background: var(--panel); border: 1px solid var(--rule); padding: 16px 18px; position: relative; }
+  .stat-label { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+  .stat-value { font-family: "Archivo Black"; font-size: 22px; color: var(--text); line-height: 1; letter-spacing: -0.01em; }
+  .stat-value.mono { font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 20px; }
+  .stat-unit { font-size: 12px; color: var(--text-3); margin-left: 4px; font-family: "Archivo"; font-weight: 400; }
+  .stat-note { font-size: 11px; color: var(--text-3); margin-top: 6px; font-family: "JetBrains Mono", monospace; }
+
+  /* Hero */
+  .hero { padding: 24px 0 0; }
+  .hero-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+  .hero-pill { font-family: "JetBrains Mono", monospace; font-size: 10px; padding: 5px 10px; letter-spacing: 0.18em; font-weight: 600; }
+  .hero-pill.hi { background: var(--hi); color: #0e110d; }
+  .hero-pill.dim { color: var(--text-3); border: 1px solid var(--rule-2); }
+  .hero-title { font-family: "Archivo Black"; font-size: clamp(64px, 16vw, 156px); line-height: 0.82; letter-spacing: -0.05em; margin: 0; text-transform: uppercase; }
+  .hero-title .dot { color: var(--hi); }
+  .hero-title .reg { font-family: "Archivo"; font-weight: 500; font-size: 0.36em; letter-spacing: 0.04em; display: block; margin-top: 14px; color: var(--text-2); text-transform: uppercase; }
+  .hero-sub { font-size: clamp(15px, 4.2vw, 19px); color: var(--text-2); margin: 28px 0 0; max-width: 60ch; line-height: 1.5; }
+
+  /* Meta strip */
+  .meta-strip { display: flex; flex-wrap: wrap; gap: 0; margin: 36px 0 0; border: 1px solid var(--rule); }
+  .meta-cell { flex: 1 1 140px; padding: 14px 16px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-bottom: -1px; margin-right: -1px; min-width: 140px; }
+  .meta-cell:last-child { border-right: 1px solid var(--rule); }
+  .meta-k { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+  .meta-v { font-family: "Archivo Black"; font-size: 17px; color: var(--text); line-height: 1.1; }
+  .meta-v.mono { font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 14px; }
+
+  /* Callouts with hazard top */
+  .callout { background: var(--panel); padding: 14px 18px; margin: 22px 0; font-size: 14px; color: var(--text-2); line-height: 1.55; position: relative; }
+  .callout::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--hi); }
+  .callout.warn { background: #2a2218; }
+  .callout.warn::before { background-image: repeating-linear-gradient(135deg, var(--hi) 0 10px, #0e110d 10px 20px); }
+  .callout.danger { background: #2a1815; }
+  .callout.danger::before { background: var(--danger); }
+  .callout.info::before { background: var(--teal); }
+  .callout-tag { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hi); margin-bottom: 4px; display: block; font-weight: 600; }
+  .callout.warn .callout-tag { color: var(--hi); }
+  .callout.danger .callout-tag { color: var(--danger); }
+  .callout.info .callout-tag { color: var(--teal); }
+
+  /* Procedure */
+  .proc { border: 1px solid var(--rule); background: var(--panel); margin: 18px 0 28px; }
+  .proc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none; flex-wrap: wrap; border-left: 4px solid transparent; transition: all 140ms ease; }
+  .proc-head:hover { background: var(--panel-2); border-left-color: var(--hi); }
+  .proc.open .proc-head { background: var(--panel-2); border-left-color: var(--hi); border-bottom: 1px solid var(--rule); }
+  .proc-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-width: 0; }
+  .proc-tag { font-family: "JetBrains Mono", monospace; font-size: 11px; padding: 4px 9px; background: var(--hi); color: #0e110d; letter-spacing: 0.08em; font-weight: 700; flex-shrink: 0; }
+  .proc-name { font-family: "Archivo"; font-weight: 700; font-size: clamp(15px, 4.2vw, 18px); letter-spacing: -0.005em; color: var(--text); }
+  .proc-meta { display: flex; gap: 14px; font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); align-items: center; flex-wrap: wrap; letter-spacing: 0.04em; }
+  .proc-meta strong { color: var(--text); font-weight: 600; }
+  .proc-chev { width: 22px; height: 22px; display: grid; place-items: center; transition: transform 200ms ease; color: var(--text-3); }
+  .proc.open .proc-chev { transform: rotate(90deg); color: var(--hi); }
+  .proc-body { padding: 22px 22px 26px; display: none; }
+  .proc.open .proc-body { display: block; }
+  @media (max-width: 540px) {
+    .proc-meta span:not(.proc-chev) { display: none; }
+    .proc-body { padding: 18px 16px 22px !important; }
+  }
+
+  .step-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--rule); flex-wrap: wrap; }
+  .step-bar-progress { flex: 1; height: 4px; min-width: 120px; background: var(--rule); position: relative; overflow: hidden; }
+  .step-bar-progress::after { content: ""; position: absolute; inset: 0; background: var(--hi); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform 250ms ease; }
+  .step-bar-text { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; }
+  .step-bar button { font-family: inherit; font-size: 11px; padding: 4px 10px; background: transparent; border: 1px solid var(--rule-2); color: var(--text-2); cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+  .step-bar button:hover { background: var(--hi); color: #0e110d; border-color: var(--hi); }
+
+  .step { display: grid; grid-template-columns: 28px 1fr; gap: 14px; padding: 14px 0; border-top: 1px solid var(--rule); }
+  .step:first-of-type { border-top: 0; padding-top: 4px; }
+  .step-check {
+    width: 22px; height: 22px; border: 1.5px solid var(--text-3); background: transparent; cursor: pointer;
+    display: grid; place-items: center; padding: 0; transition: all 120ms ease; margin-top: 2px;
+  }
+  .step-check:hover { border-color: var(--hi); }
+  .step-check.done { background: var(--hi); border-color: var(--hi); }
+  .step-check.done::after { content: "✓"; color: #0e110d; font-size: 14px; line-height: 1; font-weight: 700; }
+  .step-body .step-num { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; margin-right: 10px; font-weight: 600; }
+  .step-body .step-text { font-size: 15px; line-height: 1.55; color: var(--text); }
+  .step.done .step-body .step-text { color: var(--text-3); text-decoration: line-through; text-decoration-color: var(--text-3); }
+  .step-tip { font-size: 13px; color: var(--text-3); margin-top: 6px; line-height: 1.5; padding-left: 12px; border-left: 2px solid var(--rule-2); }
+
+  /* Parts pills */
+  .parts-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 18px; }
+  .part-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--bg); border: 1px solid var(--rule); font-size: 12px; }
+  .part-pill .mono { font-size: 11px; color: var(--text); }
+  .part-pill .label { color: var(--text-3); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-family: "JetBrains Mono", monospace; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--text); }
+  th { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-3); font-weight: 600; background: var(--panel); border-bottom: 1px solid var(--rule); border-top: 1px solid var(--rule); }
+  td.mono, th.mono { font-family: "JetBrains Mono", monospace; font-size: 13px; }
+  tr:hover td { background: var(--panel-2); }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  @media (max-width: 540px) {
+    .table-scroll { margin: 0 -18px; padding: 0 18px; }
+    .table-scroll table { min-width: 480px; }
+  }
+
+  /* Spec block */
+  .specblock { display: grid; grid-template-columns: 220px 1fr; gap: 0; border: 1px solid var(--rule); }
+  .specblock > div { padding: 11px 16px; border-bottom: 1px solid var(--rule); }
+  .specblock > div:nth-last-child(-n+2) { border-bottom: none; }
+  .specblock .k { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); letter-spacing: 0.1em; background: var(--panel); text-transform: uppercase; }
+  .specblock .v { font-family: "Archivo"; font-weight: 500; font-size: 14px; color: var(--text); }
+  @media (max-width: 540px) {
+    .specblock { grid-template-columns: 1fr; }
+    .specblock .k { border-bottom: none; padding-bottom: 4px; }
+    .specblock .v { padding-top: 0; padding-bottom: 12px; }
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; margin: 16px 0 28px; }
+  .timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--rule); }
+  .tl-row { position: relative; padding: 16px 0 16px 14px; display: grid; grid-template-columns: 150px 1fr; gap: 24px; align-items: start; border-bottom: 1px dashed var(--rule); }
+  .tl-row:last-child { border-bottom: 0; }
+  .tl-row::before { content: ""; position: absolute; left: -32px; top: 24px; width: 14px; height: 14px; background: var(--bg); border: 2px solid var(--text-3); }
+  .tl-row.major::before { background: var(--hi); border-color: var(--hi); }
+  .tl-hours { font-family: "Archivo Black"; font-size: 14px; color: var(--text); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.1; }
+  .tl-hours small { display: block; font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text-3); font-weight: 400; letter-spacing: 0.1em; margin-top: 4px; text-transform: none; }
+  .tl-tasks { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tl-task { background: var(--panel); border: 1px solid var(--rule); padding: 6px 11px; font-size: 12px; color: var(--text-2); font-family: inherit; cursor: pointer; transition: all 120ms ease; }
+  .tl-task:hover { background: var(--panel-2); border-color: var(--rule-2); transform: translateY(-1px); }
+  .tl-task.replace { background: var(--hi); color: #0e110d; border-color: var(--hi); font-weight: 600; }
+  .tl-task.replace:hover { background: #ffe21d; }
+  @media (max-width: 540px) {
+    .tl-row { grid-template-columns: 1fr; gap: 8px; padding: 12px 0; }
+  }
+
+  /* Search */
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .search-input {
+    flex: 1; min-width: 100%; padding: 12px 14px; background: var(--panel); border: 1px solid var(--rule);
+    font-family: inherit; font-size: 16px; color: var(--text); min-height: 44px;
+  }
+  .search-input:focus { outline: none; border-color: var(--hi); }
+  .search-input::placeholder { color: var(--text-3); }
+  @media (min-width: 540px) { .search-input { min-width: 220px; font-size: 14px; } }
+  .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { padding: 9px 14px; background: var(--panel); border: 1px solid var(--rule); font-size: 13px; color: var(--text-2); cursor: pointer; font-family: inherit; min-height: 36px; font-weight: 500; }
+  .chip:hover { background: var(--panel-2); color: var(--text); }
+  .chip.on { background: var(--hi); color: #0e110d; border-color: var(--hi); font-weight: 700; }
+
+  /* Mobile parts cards */
+  .parts-cards { display: none; }
+  @media (max-width: 720px) {
+    .parts-table-wrap { display: none; }
+    .parts-cards { display: flex; flex-direction: column; gap: 10px; }
+    .pcard { background: var(--panel); border: 1px solid var(--rule); padding: 14px; border-left: 3px solid var(--hi); }
+    .pcard-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+    .pcard-name { font-family: "Archivo"; font-weight: 700; font-size: 15px; line-height: 1.3; color: var(--text); }
+    .pcard-cat { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; padding-top: 3px; }
+    .pcard-row { display: grid; grid-template-columns: 70px 1fr; gap: 8px; padding: 6px 0; border-top: 1px dashed var(--rule); font-size: 13px; }
+    .pcard-row .k { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); padding-top: 3px; }
+    .pcard-row .v { color: var(--text); word-break: break-word; }
+    .pcard-alts { display: flex; flex-wrap: wrap; gap: 4px; }
+    .pcard-alt { font-family: "JetBrains Mono", monospace; font-size: 11px; padding: 2px 6px; background: var(--bg); border: 1px solid var(--rule); }
+    .pcard-notes { font-size: 12px; color: var(--text-3); margin-top: 2px; line-height: 1.4; }
+  }
+
+  /* Log */
+  .log-grid { display: grid; grid-template-columns: 120px 90px 1fr auto; gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 600px) {
+    .log-grid { grid-template-columns: 1fr 1fr; }
+    .log-grid .work { grid-column: 1 / -1; }
+    .log-grid .add { grid-column: 1 / -1; min-height: 44px; }
+  }
+
+  /* Details element styling */
+  details { background: var(--panel); border: 1px solid var(--rule); padding: 14px 18px; border-left: 3px solid var(--rule-2); }
+  details[open] { border-left-color: var(--hi); }
+  details summary { cursor: pointer; font-family: "Archivo"; font-weight: 600; font-size: 15px; color: var(--text); list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "›"; display: inline-block; margin-right: 10px; transition: transform 180ms ease; color: var(--hi); font-weight: 700; font-size: 18px; line-height: 0; }
+  details[open] summary::before { transform: rotate(90deg); }
+
+  /* Track diagram */
+  .track-diagram {
+    background: var(--panel); border: 1px solid var(--rule); padding: 20px;
+    margin: 20px 0; position: relative;
+  }
+  .track-diagram svg { width: 100%; height: auto; display: block; }
+
+  /* Section anchor offset */
+  section[data-section] { scroll-margin-top: 20px; }
+
+  /* Print */
+  @media print {
+    .rail, .scrim, .topbar, .tweaks-floating { display: none !important; }
+    .app { display: block; }
+    .doc { max-width: 100%; padding: 0; }
+    .proc-body { display: block !important; }
+    * { background: white !important; color: black !important; }
+  }
+
+  button { font-family: inherit; }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+/* ===== tweaks-panel.jsx ===== */
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "palette": ["#D97757", "#29261b", "#f6f4ef"],
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        options={['#D97757', '#2A6FDB', '#1F8A5B', '#7A5AE0']}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakColor  label="Palette" value={t.palette}
+//                        options={[['#D97757', '#29261b', '#f6f4ef'],
+//                                  ['#475569', '#0f172a', '#f1f5f9']]}
+//                        onChange={(v) => setTweak('palette', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+
+  .twk-chips{display:flex;gap:6px}
+  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
+    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
+    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
+    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
+  .twk-chip:hover{transform:translateY(-1px);
+    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
+  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),
+    0 2px 6px rgba(0,0,0,.15)}
+  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
+    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i:first-child{box-shadow:none}
+  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+    // Same-window signal so in-page listeners (deck-stage rail thumbnails)
+    // can react — the parent message only reaches the host, not peers.
+    window.dispatchEvent(new CustomEvent('tweakchange', { detail: edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  // Auto-inject a rail toggle when a <deck-stage> is on the page. The
+  // toggle drives the deck's per-viewer _railVisible via window message;
+  // state is mirrored from the same localStorage key the deck reads so
+  // the control reflects reality across reloads. The mechanism is the
+  // message — authors who want custom placement can post it directly
+  // and pass noDeckControls to suppress this one.
+  const hasDeckStage = React.useMemo(
+    () => typeof document !== 'undefined' && !!document.querySelector('deck-stage'),
+    [],
+  );
+  // deck-stage enables its rail in connectedCallback, but this panel can
+  // mount before that element has upgraded. The initial read catches the
+  // common case; the listener covers mounting first. (Older deck-stage.js
+  // copies still wait for the host's __omelette_rail_enabled postMessage —
+  // same listener handles those.)
+  const [railEnabled, setRailEnabled] = React.useState(
+    () => hasDeckStage && !!document.querySelector('deck-stage')?._railEnabled,
+  );
+  React.useEffect(() => {
+    if (!hasDeckStage || railEnabled) return undefined;
+    const onMsg = (e) => {
+      if (e.data && e.data.type === '__omelette_rail_enabled') setRailEnabled(true);
+    };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, [hasDeckStage, railEnabled]);
+  const [railVisible, setRailVisible] = React.useState(() => {
+    try { return localStorage.getItem('deck-stage.railVisible') !== '0'; } catch (e) { return true; }
+  });
+  const toggleRail = (on) => {
+    setRailVisible(on);
+    window.postMessage({ type: '__deck_rail_visible', on }, '*');
+  };
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" data-noncommentable=""
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">
+          {children}
+          {hasDeckStage && railEnabled && !noDeckControls && (
+            <TweakSection label="Deck">
+              <TweakToggle label="Thumbnail rail" value={railVisible} onChange={toggleRail} />
+            </TweakSection>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  // Segments wrap mid-word once per-segment width runs out. The track is
+  // ~248px (280 panel − 28 body pad − 4 seg pad), each button loses 12px
+  // to its own padding, and 11.5px system-ui averages ~6.3px/char — so 2
+  // options fit ~16 chars each, 3 fit ~10. Past that (or >3 options), fall
+  // back to a dropdown rather than wrap.
+  const labelLen = (o) => String(typeof o === 'object' ? o.label : o).length;
+  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
+  const fitsAsSegments = maxLen <= ({ 2: 16, 3: 10 }[options.length] ?? 0);
+  if (!fitsAsSegments) {
+    // <select> emits strings — map back to the original option value so the
+    // fallback stays type-preserving (numbers, booleans) like the segment path.
+    const resolve = (s) => {
+      const m = options.find((o) => String(typeof o === 'object' ? o.value : o) === s);
+      return m === undefined ? s : typeof m === 'object' ? m.value : m;
+    };
+    return <TweakSelect label={label} value={value} options={options}
+                        onChange={(s) => onChange(resolve(s))} />;
+  }
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+// Relative-luminance contrast pick — checkmarks drawn over a swatch need to
+// read on both #111 and #fafafa without per-option configuration. Hex input
+// only (#rgb / #rrggbb); named or rgb()/hsl() colors fall through to "light".
+function __twkIsLight(hex) {
+  const h = String(hex).replace('#', '');
+  const x = h.length === 3 ? h.replace(/./g, (c) => c + c) : h.padEnd(6, '0');
+  const n = parseInt(x.slice(0, 6), 16);
+  if (Number.isNaN(n)) return true;
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return r * 299 + g * 587 + b * 114 > 148000;
+}
+
+const __TwkCheck = ({ light }) => (
+  <svg viewBox="0 0 14 14" aria-hidden="true">
+    <path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2"
+          strokeLinecap="round" strokeLinejoin="round"
+          stroke={light ? 'rgba(0,0,0,.78)' : '#fff'} />
+  </svg>
+);
+
+// TweakColor — curated color/palette picker. Each option is either a single
+// hex string or an array of 1-5 hex strings; the card adapts — a lone color
+// renders solid, a palette renders colors[0] as the hero (left ~2/3) with the
+// rest stacked in a sharp column on the right. onChange emits the
+// option in the shape it was passed (string stays string, array stays array).
+// Without options it falls back to the native color input for back-compat.
+function TweakColor({ label, value, options, onChange }) {
+  if (!options || !options.length) {
+    return (
+      <div className="twk-row twk-row-h">
+        <div className="twk-lbl"><span>{label}</span></div>
+        <input type="color" className="twk-swatch" value={value}
+               onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+  // Native <input type=color> emits lowercase hex per the HTML spec, so
+  // compare case-insensitively. String() guards JSON.stringify(undefined),
+  // which returns the primitive undefined (no .toLowerCase).
+  const key = (o) => String(JSON.stringify(o)).toLowerCase();
+  const cur = key(value);
+  return (
+    <TweakRow label={label}>
+      <div className="twk-chips" role="radiogroup">
+        {options.map((o, i) => {
+          const colors = Array.isArray(o) ? o : [o];
+          const [hero, ...rest] = colors;
+          const sup = rest.slice(0, 4);
+          const on = key(o) === cur;
+          return (
+            <button key={i} type="button" className="twk-chip" role="radio"
+                    aria-checked={on} data-on={on ? '1' : '0'}
+                    aria-label={colors.join(', ')} title={colors.join(' · ')}
+                    style={{ background: hero }}
+                    onClick={() => onChange(o)}>
+              {sup.length > 0 && (
+                <span>
+                  {sup.map((c, j) => <i key={j} style={{ background: c }} />)}
+                </span>
+              )}
+              {on && <__TwkCheck light={__twkIsLight(hero)} />}
+            </button>
+          );
+        })}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
+</script>
+<script type="text/babel" data-presets="react">
+/* ===== ac18-content.jsx ===== */
+// ac18-content.jsx — AC-18 data + section components
+// All Yanmar part numbers below are commonly cited for the 3TNE74 engine fitted to the AC-18.
+// Numbers vary by build year and chassis number. ALWAYS verify against the engine plate.
+
+const SPECS = {
+  designation: "AC-18 (tracked utility)",
+  market: "Japanese domestic — UK grey import",
+  years: "≈ 1994 – 2004 (mid-late production)",
+  engine: "Yanmar 3TNE74 — 3-cyl liquid-cooled IDI diesel",
+  displacement: "854 cc",
+  power: "18 hp (13.4 kW) @ 2600 rpm",
+  drive: "Twin-pump hydrostatic (HST) — independent track drive",
+  tracks: "Rubber, ≈ 250 mm wide, double-flange steel idler & sprocket",
+  pto: "540 rpm, rear-mounted, 1⅜\" 6-spline",
+  weight: "≈ 870 kg",
+  fuel: "Diesel · red diesel permitted off-road (UK ag use)",
+};
+
+const CAPACITIES = [
+  { k: "Engine oil", v: "2.8 L", t: "with new filter" },
+  { k: "HST / transmission", v: "12 L", t: "shared HST + final drive sump" },
+  { k: "Coolant", v: "2.5 L", t: "block + radiator" },
+  { k: "Fuel tank", v: "13 L", t: "" },
+];
+
+const FLUIDS = [
+  { k: "Engine oil", spec: "SAE 10W-30 or 15W-40 · API CF / CF-4", note: "10W-30 preferred for cold-start with no engine heater." },
+  { k: "HST / transmission", spec: "HST-rated UTTO · meets JD J20D or Yanmar HST", note: "Comma SUTO HV, Mobilfluid 424 (acceptable), Yanmar genuine HST. DO NOT use a cheap gear oil." },
+  { k: "Coolant", spec: "OAT or IAT antifreeze, 50:50 with clean water", note: "Avoid mixing chemistries — flush first." },
+  { k: "Grease", spec: "NLGI #2 lithium EP", note: "" },
+  { k: "Fuel", spec: "EN 590 diesel (red permitted off-road)", note: "Limit biodiesel to ≤ 7 %; rubber lines on older imports are not B100 compatible." },
+];
+
+// ---- Service schedule -----------------------------------------------------
+const SCHEDULE = [
+  { hours: "Daily / pre-use", major: false, tasks: [
+    { kind: "check", t: "Engine oil level", link: "daily" },
+    { kind: "check", t: "Coolant level", link: "daily" },
+    { kind: "check", t: "HST sight glass", link: "daily" },
+    { kind: "check", t: "Track condition", link: "track-insp" },
+    { kind: "check", t: "Air filter dust valve", link: "daily" },
+    { kind: "check", t: "Lights, horn, beacon", link: "daily" },
+    { kind: "check", t: "Walk-around for leaks", link: "daily" },
+  ]},
+  { hours: "Every 50 h", major: false, tasks: [
+    { kind: "check", t: "Grease all nipples", link: "grease" },
+    { kind: "check", t: "Battery electrolyte", link: "battery" },
+    { kind: "check", t: "Track tension", link: "track-tension" },
+    { kind: "check", t: "Track-roller bearings", link: "track-insp" },
+  ]},
+  { hours: "First 50 h (run-in)", major: true, tasks: [
+    { kind: "replace", t: "Engine oil + filter", link: "engine-oil" },
+    { kind: "replace", t: "HST fluid + filter", link: "hst" },
+    { kind: "check", t: "Valve clearances", link: "valves" },
+    { kind: "check", t: "All fasteners — bolt torque", link: "bolts" },
+  ]},
+  { hours: "Every 100 h", major: false, tasks: [
+    { kind: "replace", t: "Engine oil", link: "engine-oil" },
+    { kind: "check", t: "Fan belt tension", link: "fan-belt" },
+    { kind: "check", t: "HST neutral creep", link: "hst-neutral" },
+  ]},
+  { hours: "Every 200 h", major: true, tasks: [
+    { kind: "replace", t: "Engine oil filter", link: "engine-oil" },
+    { kind: "replace", t: "Fuel filter element", link: "fuel-filter" },
+    { kind: "check", t: "Air filter — clean / inspect", link: "air-filter" },
+    { kind: "check", t: "Cooling system", link: "cooling-insp" },
+    { kind: "check", t: "Fuel lines", link: "fuel-insp" },
+  ]},
+  { hours: "Every 400 h", major: true, tasks: [
+    { kind: "replace", t: "Air filter element", link: "air-filter" },
+    { kind: "check", t: "Valve clearances (cold)", link: "valves" },
+    { kind: "check", t: "Injector spray pattern", link: "injectors" },
+    { kind: "check", t: "Track alignment", link: "track-tension" },
+  ]},
+  { hours: "Every 800 h", major: true, tasks: [
+    { kind: "replace", t: "HST fluid", link: "hst" },
+    { kind: "replace", t: "HST suction filter", link: "hst" },
+    { kind: "check", t: "Sprocket & idler wear", link: "track-insp" },
+  ]},
+  { hours: "Every 1000 h / 2 yrs", major: true, tasks: [
+    { kind: "replace", t: "Coolant — drain & refill", link: "coolant" },
+    { kind: "replace", t: "Radiator hoses (inspect)", link: "cooling-insp" },
+    { kind: "replace", t: "Fuel lines (inspect)", link: "fuel-insp" },
+  ]},
+];
+
+// ---- UK Parts list --------------------------------------------------------
+const PARTS = [
+  { cat: "Filters", name: "Engine oil filter", yanmar: "119305-35151", alts: ["Donaldson P502067", "Baldwin B7165", "Hifi SO3357", "Fram PH4967"], notes: "Spin-on, M20×1.5 (common to 3TNE family)", price: "≈ £8–14", suppliers: "Malpas, AgriParts UK, Sparex" },
+  { cat: "Filters", name: "Fuel filter element", yanmar: "129907-55801", alts: ["Donaldson P550127", "Hifi FF5132", "Baldwin BF7587"], notes: "Bowl-type cartridge — confirm against your filter housing", price: "≈ £6–12", suppliers: "Malpas, Sparex" },
+  { cat: "Filters", name: "Air filter element", yanmar: "124550-12530", alts: ["Donaldson P822686", "Hifi SA12108", "Mann C 1112"], notes: "Compact dry-paper canister", price: "≈ £14–22", suppliers: "Malpas, AgriParts UK" },
+  { cat: "Filters", name: "HST suction filter / strainer", yanmar: "172472-73430", alts: ["Hifi SH56612", "Donaldson P176567"], notes: "Internal mesh inside HST housing; gasket replace on refit", price: "≈ £18–30", suppliers: "Malpas, Sparex" },
+  { cat: "Filters", name: "HST return filter (where fitted)", yanmar: "172467-73430", alts: ["Hifi SH63202"], notes: "Late-build models add an external spin-on — check chassis", price: "≈ £22–35", suppliers: "Malpas" },
+  { cat: "Filters", name: "Fuel sediment bowl O-ring", yanmar: "23414-080002", alts: ["Generic 8×2 mm NBR"], notes: "Renew at every fuel-filter service", price: "≈ £1", suppliers: "Seal kits" },
+
+  { cat: "Lubricants", name: "Engine oil 10W-30 / 15W-40 (5 L)", yanmar: "—", alts: ["Comma X-Flow MF 15W-40", "Morris Multi-Farm 10W-30", "Mobil Delvac MX 15W-40"], notes: "API CF or better; cold-start favours 10W-30", price: "≈ £22–32 / 5 L", suppliers: "Halfords, agri-merchants" },
+  { cat: "Lubricants", name: "HST fluid · UTTO (20 L)", yanmar: "—", alts: ["Comma SUTO HV", "Mobilfluid 424", "Yanmar genuine HST"], notes: "Must meet JD J20D for HST duty", price: "≈ £65–95 / 20 L", suppliers: "Morris, Carrs Billington" },
+  { cat: "Lubricants", name: "Antifreeze (concentrate, 5 L)", yanmar: "—", alts: ["Comma Xstream G48 (blue)", "Morris MAF Plus"], notes: "Mix 50:50 with clean water", price: "≈ £18–26 / 5 L", suppliers: "Halfords" },
+  { cat: "Lubricants", name: "Grease NLGI #2 lithium EP (400 g)", yanmar: "—", alts: ["Morris K48 EP2", "Comma Lithium EP2"], notes: "", price: "≈ £3–6", suppliers: "Toolstation, Screwfix" },
+
+  { cat: "Tracks", name: "Rubber track (250 × 47 × 84)", yanmar: "—", alts: ["Bridgestone 250×47×84", "Camso TTH 250×47×84", "ITR 250×47×84"], notes: "Measure existing — width 250 mm, pitch 47 mm, 84 links typical. ALWAYS verify before ordering.", price: "≈ £280–420 each", suppliers: "Trackline, MWE Tracks, ITR UK" },
+  { cat: "Tracks", name: "Track roller (single-flange)", yanmar: "—", alts: ["Sparex roller for compact crawler"], notes: "Confirm bore + flange config from your tractor", price: "≈ £45–75 each", suppliers: "MWE, Trackline" },
+  { cat: "Tracks", name: "Idler / front guide wheel", yanmar: "—", alts: ["Aftermarket pattern"], notes: "Often interchangeable with mini-excavator parts", price: "≈ £80–140", suppliers: "MWE Tracks" },
+  { cat: "Tracks", name: "Sprocket (drive)", yanmar: "—", alts: ["Aftermarket pattern"], notes: "Sold in pairs ideally — replace when tooth ramps look hooked", price: "≈ £75–130 each", suppliers: "MWE Tracks" },
+  { cat: "Tracks", name: "Track-tension grease zerk (special)", yanmar: "—", alts: ["1/4 BSP grease nipple"], notes: "Tension cylinder takes grease as a hydraulic medium", price: "≈ £2", suppliers: "Any factor" },
+
+  { cat: "Engine", name: "Head gasket set (3TNE74)", yanmar: "129508-01331", alts: ["Hifi 129508-01331 pattern"], notes: "Order by chassis to confirm thickness", price: "≈ £60–110", suppliers: "Malpas, Bates Tractors" },
+  { cat: "Engine", name: "Thermostat (76.5 °C)", yanmar: "129155-49800", alts: ["Generic 52 mm wax pellet"], notes: "", price: "≈ £14–24", suppliers: "Malpas, Sparex" },
+  { cat: "Engine", name: "Glow plug (×3)", yanmar: "119717-77800", alts: ["NGK Y-743RS", "Bosch 0250202036"], notes: "10.5 V — wired in parallel", price: "≈ £7–12 each", suppliers: "Malpas, eBay UK" },
+  { cat: "Engine", name: "Fan / alternator belt", yanmar: "129350-77350", alts: ["Gates 6240MC", "Optibelt AVX10×750"], notes: "Measure existing — A/B build variants exist", price: "≈ £9–14", suppliers: "Malpas" },
+  { cat: "Engine", name: "Injector nozzle (×3)", yanmar: "129907-53000", alts: ["Bosch DN0SD2110"], notes: "Throttle-pintle DN-type — specialist pop-test recommended", price: "≈ £18–28 each", suppliers: "Diesel specialist" },
+
+  { cat: "Electrical", name: "Battery (Group 38B19R/L)", yanmar: "—", alts: ["Numax CXV17", "Lucas LP005", "Yuasa NP4-12"], notes: "≈ 36–45 Ah, RH or LH post — confirm polarity", price: "≈ £55–85", suppliers: "Tayna, Halfords" },
+  { cat: "Electrical", name: "Starter motor", yanmar: "129573-77010", alts: ["Reman 12 V, 1.0 kW"], notes: "Often shared with 3TNE family", price: "≈ £85–160 reman", suppliers: "Malpas" },
+  { cat: "Electrical", name: "Alternator", yanmar: "129423-77200", alts: ["Reman 12 V, 35 A"], notes: "", price: "≈ £95–180 reman", suppliers: "Malpas" },
+
+  { cat: "Cab / Trim", name: "Seat (universal pan)", yanmar: "—", alts: ["Sparex S.71653", "Granit pan seat"], notes: "OEM seats often perished; universal fits well", price: "≈ £45–95", suppliers: "Sparex, Malpas" },
+  { cat: "Cab / Trim", name: "Decal set — AC18", yanmar: "—", alts: ["JapaneseTractorSpares.co.uk repro"], notes: "Repro vinyl, body colour-matched", price: "≈ £25–45", suppliers: "JTS, eBay UK" },
+];
+
+const PART_CATS = ["All", "Filters", "Lubricants", "Tracks", "Engine", "Electrical", "Cab / Trim"];
+
+// ---- Procedures -----------------------------------------------------------
+const PROC_ENGINE_OIL = {
+  id: "engine-oil",
+  tag: "F.01",
+  name: "Engine oil & filter — drain / refill",
+  interval: "Every 100 h / annually (filter every 200 h)",
+  time: "≈ 30 min",
+  difficulty: "Easy",
+  tools: ["10 mm spanner", "76 mm cup wrench or strap", "Drain pan (4 L+)", "Funnel", "Clean rag"],
+  parts: [
+    { label: "Oil filter", code: "119305-35151" },
+    { label: "Engine oil", code: "10W-30 / 15W-40, 2.8 L" },
+    { label: "Drain plug washer", code: "Cu 14 mm" },
+  ],
+  steps: [
+    { t: "Run engine to operating temperature (5–10 min), then stop. Warm oil drains cleaner. Stay clear of hot exhaust." },
+    { t: "Park level, parking brake set, key out, HST levers in neutral. Open bonnet/rear panel as fitted." },
+    { t: "Remove the rocker cover filler cap to break vacuum and accelerate drainage." },
+    { t: "Locate the sump drain plug — bottom of the engine, slightly right of centre. Place a 4 L drain pan." },
+    { t: "Crack the 14 mm drain plug anti-clockwise. Finish by hand. Allow ≥ 10 minutes for full drainage.", tip: "Inspect the copper washer — replace if flattened, nicked, or it weeps." },
+    { t: "Refit the drain plug with its washer. Torque to 30 Nm — the alloy sump strips easily.", tip: "Snug + ¼ turn is enough if you have no torque wrench." },
+    { t: "Locate the spin-on oil filter on the RH side of the block. Position the pan beneath it." },
+    { t: "Remove the filter anti-clockwise. Hand-tight if you can; cup wrench if not." },
+    { t: "Wipe the filter seat clean. Smear fresh oil onto the new filter's rubber seal. Pre-fill the filter with oil if it can be set upright before fitting." },
+    { t: "Spin the new filter on by hand until the gasket touches the seat, then ¾ turn further. Do NOT wrench it on — destroys the gasket." },
+    { t: "Refill via the rocker filler. Pour slowly, dip-check after the first 2 L. Spec is 2.8 L with a new filter — but trust the dipstick." },
+    { t: "Refit filler cap. Start engine, idle 30 s while watching the oil pressure light — must extinguish within 5 s.", tip: "If the light stays on: STOP. Re-check oil level, filter seating, and pre-fill." },
+    { t: "Stop engine, wait 2 minutes, re-check level. Top up to upper mark if needed. Inspect filter and drain plug for leaks." },
+    { t: "Log hours and date on the filter (felt-tip on the can works). Bag used oil for council recycling." },
+  ],
+};
+
+const PROC_FUEL = {
+  id: "fuel-filter",
+  tag: "F.02",
+  name: "Fuel filter element & bleed",
+  interval: "Every 200 h / annually",
+  time: "≈ 25 min including bleed",
+  difficulty: "Easy–medium",
+  tools: ["12 mm spanner", "10 mm spanner", "Drain bowl", "Clean diesel", "Pliers"],
+  parts: [
+    { label: "Fuel filter", code: "129907-55801" },
+    { label: "Bowl O-ring", code: "23414-080002" },
+  ],
+  steps: [
+    { t: "Close the fuel tap on the underside of the tank — quarter-turn lever vertical = OFF.", tip: "Skipping this empties the tank onto the floor." },
+    { t: "Place a clean drain bowl beneath the filter assembly on the right of the engine." },
+    { t: "Unscrew the retaining bolt / bowl ring (12 mm). Catch the bowl — it holds diesel." },
+    { t: "Tip the contents into your drain bowl. Inspect for a clear water layer at the bottom (= tank water ingress) or black sediment (= aged fuel)." },
+    { t: "Lift out the old paper element. Clean inside the bowl and the upper housing with a lint-free rag and clean diesel.", tip: "Never use compressed air on the filter head — it can damage the seat." },
+    { t: "Renew the bowl O-ring. Oil it with diesel before seating it in its groove." },
+    { t: "Drop the new element in (spring or centre-tube orientation per the carton). Offer the bowl up and tighten the retaining bolt EVENLY — snug, not crushed.", tip: "Cross-threading the alloy filter head is an expensive mistake. Always start by hand." },
+    { t: "Open the tank tap. Diesel will now run by gravity through the new element." },
+    { t: "Bleed at the filter: slacken the bleed screw on top of the head ½ turn. Wait until clear fuel runs without bubbles, nip tight.", tip: "If your housing has no bleed screw, crack the supply union at the injection-pump inlet instead." },
+    { t: "Bleed at the injection pump: slacken the pump inlet union (10 mm) until clear fuel weeps, retighten." },
+    { t: "Bleed at the injectors (only if it still won't start): slacken each HP pipe at the injector by ½ turn, crank in 5-second bursts until fuel sprays, retighten." },
+    { t: "Start. It may run lumpy for 10–20 seconds while the last air clears. Check unions for leaks.", tip: "Two failed 10-s cranks = stop and re-bleed. Don't drain the battery." },
+  ],
+};
+
+const PROC_AIR = {
+  id: "air-filter",
+  tag: "F.03",
+  name: "Air filter service",
+  interval: "Clean every 200 h · Replace every 400 h / annually",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["Clip lever or flat screwdriver", "Clean rag", "Compressed air ≤ 30 psi (optional)"],
+  parts: [
+    { label: "Air filter", code: "124550-12530" },
+  ],
+  steps: [
+    { t: "Locate the air filter canister — small cylindrical housing in the engine bay with a rubber duct to the inlet manifold." },
+    { t: "Squeeze the rubber dust-valve at the bottom of the canister. Any dust that falls out should be DRY. Wet or muddy dust = an air leak upstream — find it before running the engine again." },
+    { t: "Release the two over-centre clips on the canister cap. Lift the cap clear." },
+    { t: "Slide the paper element out by its end-cap. Keep it horizontal so debris does not fall into the manifold." },
+    { t: "Inspect against a strong light: pinholes, tears, oily patches, or collapsed pleats = replace. Compressed-air cleaning is worth doing once or twice — no more.", tip: "Blow from the INSIDE OUT, ≤ 30 psi, nozzle 150 mm away. Tapping against a hard surface ruins the seal." },
+    { t: "Wipe inside the canister and cap with a damp rag. Inspect the outlet duct to the manifold for splits or loose clips — a leak here will wreck a piston in a day." },
+    { t: "Refit the element seal-end first. Confirm it seats squarely." },
+    { t: "Refit the cap with the dust valve pointing DOWN. Close both clips firmly." },
+    { t: "Start the engine. Listen at the canister and duct joints for any suck/whistle — that's a leak." },
+  ],
+};
+
+const PROC_HST = {
+  id: "hst",
+  tag: "F.04",
+  name: "HST fluid & suction filter",
+  interval: "First 50 h, then every 800 h",
+  time: "≈ 1.5 h",
+  difficulty: "Medium",
+  tools: ["17 mm + 19 mm sockets", "Drain pan (15 L)", "Funnel + long flexible hose", "Torque wrench", "New filter gasket"],
+  parts: [
+    { label: "HST suction filter", code: "172472-73430" },
+    { label: "Return filter (if fitted)", code: "172467-73430" },
+    { label: "HST fluid", code: "≈ 12 L UTTO J20D" },
+    { label: "Filter gasket", code: "OEM paper / RTV" },
+  ],
+  steps: [
+    { t: "The HST is the heart of this tractor. Contaminated or wrong fluid will kill the pumps in a season. Use ONLY a fluid that meets JD J20D / Yanmar HST.", tip: "Mobilfluid 424 (J20C) is acceptable but J20D-rated fluids (Comma SUTO HV, Yanmar genuine) are preferred for HST duty." },
+    { t: "Park level. HST warm but not hot. Move both HST levers to neutral. Wipe the area around the dipstick and fill cap." },
+    { t: "Place a 15 L drain pan beneath the transmission. There are usually two drain points — main HST sump (centre underside) and the final-drive cases (sides). Open both.", tip: "Note metal particles on the magnetic plug — light fuzz is normal, chunks are not." },
+    { t: "Allow at least 30 minutes for full drainage. While draining, locate the suction filter cover (LH side of the HST housing — 4 bolts, 12 mm). Loosen but do not yet remove." },
+    { t: "Remove the suction filter cover with its gasket. Withdraw the cylindrical mesh strainer. Wash it in clean diesel or paraffin and shake dry — do NOT direct compressed air on the mesh.", tip: "Torn or distorted mesh = replace. £20 is much cheaper than an HST pump rebuild." },
+    { t: "If your machine has the late-build external spin-on return filter, remove it now (oil filter strap). Smear oil on the new gasket and fit hand-tight + ¾ turn." },
+    { t: "Scrape off the old strainer-cover gasket from cover and case. Fit the new gasket (or a 3 mm bead of fuel-resistant RTV). Refit cover; torque bolts evenly to 22 Nm in a cross pattern." },
+    { t: "Inspect drain-plug washers and replace if doubtful. Refit drain plugs and torque to 50 Nm." },
+    { t: "Refill with fresh J20D HST fluid through the dipstick port. Capacity is approximately 12 L but the dipstick is the only truth.", tip: "A long flexible funnel hose is essential — the fill port is awkward to reach." },
+    { t: "Start the engine at idle. Move BOTH HST levers slowly forward and reverse 4–5 times each to circulate fluid and purge air. Operate the 3-point linkage 4–5 times. You may hear momentary cavitation — that's air clearing." },
+    { t: "Stop engine, wait 2 minutes, re-check the dipstick with the linkage DOWN. Top up to upper mark. Check filter cover, drain plugs, and any return-filter housing for leaks." },
+    { t: "Test drive at walking pace, both directions. Listen for whine or groaning at full lever travel — both indicate air still present or a level still low." },
+  ],
+};
+
+// ---- TRACKS ---------------------------------------------------------------
+const PROC_TRACK_INSP = {
+  id: "track-insp",
+  tag: "T.01",
+  name: "Track inspection",
+  interval: "Every 50 h",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["Torch", "Pry bar", "Tape measure"],
+  parts: [],
+  steps: [
+    { t: "Park on level ground, parking brake set. Engine off, key out." },
+    { t: "Walk each track full-length. Look for: cuts deeper than 6 mm, missing chunks at lugs, exposed steel cords, oily contamination, or stones lodged between lugs and sprocket." },
+    { t: "Rotate each track one full revolution slowly (move the tractor a metre or rock it). Inspect the underside that was on the ground." },
+    { t: "Check sprocket teeth (drive wheel at the rear of each track). Healthy = pointed teeth with crisp ramps; worn = teeth hooked over (anti-direction-of-rotation), or rounded peaks. Replace when hooked.", tip: "Always replace sprockets in pairs — uneven wear kills tracks fast." },
+    { t: "Check the front idler / tension wheel for wobble (grip and shake). Any play indicates a failed roller bearing." },
+    { t: "Check track rollers (the small wheels underneath that run on the inside of the track). Each should spin freely on its bearings. A roller that won't turn or makes a gritty noise is at end of life." },
+    { t: "Measure pitch wear by counting 10 link pitches and dividing length by 10 — should match the spec stamped on the track (typically 47 mm). More than 5 % stretch = track end-of-life." },
+    { t: "Log anything suspect. A sprocket and a track replaced together fix most drive problems." },
+  ],
+};
+
+const PROC_TRACK_TENSION = {
+  id: "track-tension",
+  tag: "T.02",
+  name: "Track tension — check & adjust",
+  interval: "Every 50 h",
+  time: "≈ 15 min each side",
+  difficulty: "Easy",
+  tools: ["Grease gun", "Straight edge or string", "Steel ruler", "10 mm spanner (relief valve)"],
+  parts: [],
+  steps: [
+    { t: "Park on hard level ground. Drive forwards 2–3 metres and stop without using the brakes — this seats the track naturally. Engine off, key out." },
+    { t: "Lay a straight edge or taut string along the top run of the track, from the sprocket to the front idler. Measure the maximum sag at the midpoint between the two TOP rollers.", tip: "AC-18 spec: 10–25 mm sag at the midpoint. Tight is worse than loose — a tight track loads the bearings and pulls links apart." },
+    { t: "TIGHTEN: locate the grease zerk on each track frame (front, near the idler). The frame contains a grease-driven tension cylinder. Pump grease in — 2 strokes at a time — and re-measure between pumps. Do not exceed the spec range." },
+    { t: "LOOSEN: locate the relief valve plug next to the zerk (small hex). Slacken it 1/2 turn. Grease will weep out under pressure as the idler retracts. Close the relief plug when the sag is correct.", tip: "Stand to one side — grease can squirt out at pressure when you open the relief." },
+    { t: "Drive 2–3 metres forward, stop, re-measure. The idler often relaxes the first metre under load. Tweak as needed." },
+    { t: "Check ALIGNMENT: with the tractor straight, sight the track from above. The track should sit centred over its rollers. If it climbs to one side, the idler shaft is mis-aligned — typically a sign of a damaged idler frame or wear in the slide bushes. Take it to a specialist before it throws a track." },
+    { t: "Repeat for the second track. Both should sag the SAME amount — uneven tension causes one-side wear." },
+  ],
+};
+
+const PROC_TRACK_BOLTS = {
+  id: "bolts",
+  tag: "T.03",
+  name: "Driveline bolt torque check",
+  interval: "First 50 h, then 500 h",
+  time: "≈ 25 min",
+  difficulty: "Easy",
+  tools: ["Torque wrench (200 Nm)", "17 mm + 19 mm sockets"],
+  parts: [],
+  steps: [
+    { t: "Sprocket retaining bolts: typically 6 per side, 17 mm. Torque to 100 Nm in a star pattern." },
+    { t: "Final-drive housing bolts to chassis: 19 mm, torque 140 Nm — check evenly." },
+    { t: "Idler-frame slide-bolts (if accessible): snug, then check for visible movement when grease pressure is applied." },
+    { t: "PTO guard bolts: 50 Nm — guards must stay attached and intact for any rear-PTO work." },
+    { t: "Cab / ROPS mount bolts (if fitted): 80 Nm — never run a ROPS bolt finger-tight." },
+    { t: "Inspect all visible fasteners for missing or sheared bolts. Replace immediately with grade 8.8 minimum." },
+  ],
+};
+
+// ---- LUBRICATION & COOLING -----------------------------------------------
+const GREASE_POINTS = [
+  { zone: "Track frames", points: [
+    "Tension-cylinder zerk (×2, one per side)",
+    "Idler-shaft seal (×2)",
+    "Sprocket-bearing housing (×2)",
+  ]},
+  { zone: "Driveline", points: [
+    "PTO output shaft seal (×1)",
+    "Rear linkage cross-shaft (×1)",
+  ]},
+  { zone: "3-point linkage", points: [
+    "Lift-arm pivots (×2)",
+    "Lower-link knuckles (×2)",
+    "Top-link pin (×1)",
+    "Stabilisers (×2)",
+  ]},
+  { zone: "Controls", points: [
+    "HST lever pivots (×2)",
+    "Hand-throttle quadrant (light oil)",
+    "Parking-brake linkage (×1)",
+  ]},
+];
+
+const PROC_GREASE = {
+  id: "grease",
+  tag: "L.01",
+  name: "Greasing routine",
+  interval: "Every 50 h or after wet/muddy work",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["Grease gun with fresh cartridge", "NLGI #2 lithium EP", "Clean rags"],
+  parts: [
+    { label: "Grease", code: "NLGI #2 EP" },
+  ],
+  steps: [
+    { t: "Park on level ground, parking brake set, key out. Load a fresh cartridge into the gun." },
+    { t: "Track frames (4 nipples): both tension-cylinder zerks have already been touched if you tensioned. Also hit the idler-shaft seal nipples (×2) and the sprocket-bearing housings (×2). Two strokes each.", tip: "The track-tension zerk uses grease as a hydraulic medium — separate from lubrication. See T.02." },
+    { t: "Driveline (2 nipples): PTO output shaft seal, rear linkage cross-shaft." },
+    { t: "3-point linkage (6 nipples): lift-arm pivots ×2, lower-link knuckles ×2, top-link pin, stabilisers ×2. Easier with the linkage raised." },
+    { t: "Controls (3 nipples + oil): HST lever pivots ×2, parking brake linkage. A drop of oil on the hand-throttle quadrant keeps it free." },
+    { t: "Two to three strokes per nipple is enough. Stop when fresh grease weeps from the seal — the bearing is full." },
+    { t: "Wipe excess grease so it doesn't collect grit. Note any nipple that refuses grease (stuck ball or solid bearing) for follow-up." },
+  ],
+};
+
+const PROC_COOLANT = {
+  id: "coolant",
+  tag: "L.02",
+  name: "Coolant — drain & refill",
+  interval: "Every 1000 h or 2 years",
+  time: "≈ 45 min",
+  difficulty: "Easy",
+  tools: ["13 mm spanner", "Drain pan", "Funnel"],
+  parts: [
+    { label: "Antifreeze", code: "1.25 L conc. + 1.25 L water" },
+  ],
+  steps: [
+    { t: "Engine COLD. Open the radiator cap slowly — cold systems can still hold a little pressure." },
+    { t: "Open the radiator drain (tap or plug at lower LH side) and the engine block drain (brass plug, LH side, beneath the injection pump)." },
+    { t: "Catch the old coolant in a pan — toxic to pets and wildlife. Take to council recycling, not down the drain." },
+    { t: "Flush with clean water through the filler until what runs out is clear (2–3 fills if heavily contaminated).", tip: "Rust or oil in the coolant = investigate before refilling." },
+    { t: "Close both drains, refit sealing washers." },
+    { t: "Pre-mix antifreeze with clean water 50:50, pour slowly through the filler. Squeeze the upper hose periodically to burp air." },
+    { t: "Leave cap OFF. Run at fast idle until the thermostat opens (upper hose warms). Top up as the level falls." },
+    { t: "Stop, cool, top up to the neck. Refit cap. Recheck after first heat cycle and again the next day." },
+  ],
+};
+
+// ---- ADJUSTMENTS ---------------------------------------------------------
+const PROC_VALVES = {
+  id: "valves",
+  tag: "A.01",
+  name: "Valve clearance — check / adjust",
+  interval: "First 50 h, then every 400 h",
+  time: "≈ 1 h",
+  difficulty: "Medium",
+  tools: ["10 mm + 12 mm spanners", "Feeler gauge (0.20 mm)", "Flat screwdriver", "Torque wrench"],
+  parts: [
+    { label: "Rocker cover gasket", code: "as required" },
+  ],
+  steps: [
+    { t: "Engine STONE COLD — overnight is best. Spec is 0.20 mm intake AND exhaust, COLD." },
+    { t: "Disconnect the breather pipe. Remove the rocker-cover bolts (10 mm) and lift the cover clear. Save the gasket if reusable." },
+    { t: "Identify the crankshaft timing mark. Rotate the crank clockwise (viewed from the front) using the fan belt." },
+    { t: "Set cylinder #1 to TDC compression: at TDC, BOTH #1 valves must be CLOSED (no rocker action). If the #1 rockers are crossing one another, turn another full revolution — you are 360° out.", tip: "On 3-cylinder engines the firing order is 1-3-2 typically; valves rock on the cylinder opposite the one being set." },
+    { t: "Slip a 0.20 mm feeler between rocker tip and valve stem on #1 intake. Correct feel: light drag, no force." },
+    { t: "Adjust: loosen the 12 mm lock-nut, turn the adjuster screw to set drag, hold the screw and torque the lock-nut to 18 Nm. Re-check after locking — it usually shifts." },
+    { t: "Repeat for #1 exhaust." },
+    { t: "Rotate crank exactly 240° clockwise. Set both #2 valves." },
+    { t: "Rotate another 240°. Set both #3 valves." },
+    { t: "Wipe inside the rocker cover and the gasket land on the head. Fit the gasket dry. Torque cover bolts evenly to 12 Nm in a cross pattern — over-tightening warps the cover." },
+    { t: "Reconnect the breather. Start the engine. A faint regular tick is normal at idle; a loud clatter = clearance too wide." },
+    { t: "Run 5 minutes, recheck for oil weeping at the cover. Wet = re-torque or new gasket." },
+  ],
+};
+
+const PROC_FAN_BELT = {
+  id: "fan-belt",
+  tag: "A.02",
+  name: "Fan / alternator belt tension",
+  interval: "Every 100 h",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["14 mm spanner (pivot)", "12 mm spanner (adjuster)"],
+  parts: [],
+  steps: [
+    { t: "Engine cool. Open the bonnet. Identify the V-belt: crank pulley → fan/water-pump pulley → alternator pulley." },
+    { t: "Inspect the belt — cracks, glazing, fraying, oil contamination = replace. Squeal on cold start = glazed or loose." },
+    { t: "Press the belt midway on the longest free run with your thumb (≈ 5 kg). Deflection target: 10–12 mm.", tip: "Too tight kills alternator and water-pump bearings. Err slightly loose." },
+    { t: "Adjust: slacken alternator pivot bolt (14 mm) half a turn. Slacken adjuster lock-nut (12 mm)." },
+    { t: "Lever the alternator outward gently — ONLY at its cast lug, never against the body. Hold tension, tighten the adjuster lock-nut first." },
+    { t: "Re-tighten pivot bolt to 45 Nm. Re-check deflection — it slackens slightly as the pivot locks." },
+    { t: "Run engine 1 minute, stop, re-check. New belts stretch in the first 15 minutes — a follow-up tension is mandatory." },
+  ],
+};
+
+const PROC_HST_NEUTRAL = {
+  id: "hst-neutral",
+  tag: "A.03",
+  name: "HST neutral creep — check / adjust",
+  interval: "Every 100 h",
+  time: "≈ 20 min",
+  difficulty: "Medium",
+  tools: ["10 mm + 12 mm spanners", "Helper recommended"],
+  parts: [],
+  steps: [
+    { t: "Diagnosis first: with engine warm and HST levers in true neutral (let go of them), the tractor should sit still on level ground. If it creeps forward or backward, the neutral position of one or both pumps is mis-adjusted.", tip: "A worn HST that creeps when warm-but-not-when-cold is a different fault — needs a service, not just adjustment." },
+    { t: "SAFETY: chock the front of the tractor before adjusting. A mis-adjusted pump can drive the machine off unexpectedly." },
+    { t: "Locate the HST lever-to-pump linkage rod for the side that creeps. Each pump has an external arm and a threaded yoke that connects to the foot pedal or hand lever." },
+    { t: "Slacken the 12 mm lock-nut on the yoke. With the engine OFF and the lever in neutral, turn the yoke a flat or two — one direction shortens, the other lengthens." },
+    { t: "Start the engine and watch the tractor at idle with the lever released. If creep is reduced, you went the right way. Repeat in small steps until still." },
+    { t: "Test in BOTH directions of lever travel — neutral is a single point on a continuous control. Adjusting it can leave reverse pressing harder than forward if you over-shoot." },
+    { t: "Tighten the lock-nut firmly while holding the yoke. Re-test." },
+    { t: "If creep persists at every adjustment, the pump's swash-plate neutral spring may be fatigued — that's a workshop job." },
+  ],
+};
+
+const PROC_BRAKES = {
+  id: "brakes",
+  tag: "A.04",
+  name: "Service & parking brake",
+  interval: "Every 100 h",
+  time: "≈ 20 min",
+  difficulty: "Easy",
+  tools: ["14 mm spanner", "Ruler"],
+  parts: [],
+  steps: [
+    { t: "The AC-18 uses the HST as its primary deceleration system — returning the levers to neutral acts as a dynamic brake. The mechanical brake is for parking and emergencies." },
+    { t: "Park on level ground, engine off. The parking-brake lever should require firm but reasonable hand effort to engage. Latch travel target: roughly half the full handle arc." },
+    { t: "Locate the parking-brake cable adjuster (where the cable meets the brake band/disc actuator on the rear of the transmission)." },
+    { t: "Slacken the 14 mm lock-nut. Turn the yoke to take up cable slack (clockwise typically). Engage the handle to test." },
+    { t: "On a 1-in-5 slope with the engine off and HST levers in neutral, the parking brake alone must hold the tractor. If it does not, take up another turn. Re-tighten the lock-nut." },
+    { t: "Inspect the cable for kinks, fraying, or rust. A frayed cable will let go without warning." },
+    { t: "If the tractor has a separate foot service brake, free play at the pedal should be 15–25 mm before resistance. Adjust at the rod yoke if outside spec." },
+  ],
+};
+
+// ---- INSPECTIONS ---------------------------------------------------------
+const PROC_DAILY = {
+  id: "daily",
+  tag: "I.01",
+  name: "Daily pre-use inspection",
+  interval: "Before every use",
+  time: "≈ 3 min",
+  difficulty: "Easy",
+  tools: ["Clean rag"],
+  parts: [],
+  steps: [
+    { t: "Walk around the tractor. Any drips beneath the engine, HST sump, or final drives? Damp patches on the side of the engine?" },
+    { t: "Pull, wipe, reinsert, read the engine oil dipstick. Top up if at or below the lower mark." },
+    { t: "Coolant level visible at radiator (COLD only!) or expansion bottle." },
+    { t: "HST dipstick or sight glass: at or near the upper mark, with engine OFF and levers in neutral." },
+    { t: "Squeeze the air-filter dust valve. Dust should be DRY." },
+    { t: "Walk each track: cuts, embedded stones, missing lug chunks, side-cord exposure. Reach the underside by rolling the tractor a metre." },
+    { t: "Sit in seat, parking brake on, HST levers neutral. Key to position I: instrument-panel lamps light (oil pressure, charge, glow). Test horn and lights." },
+    { t: "Start — oil pressure light out within 5 seconds, charge light out off-idle. Listen for any new noise before working." },
+  ],
+};
+
+const PROC_BATTERY = {
+  id: "battery",
+  tag: "I.02",
+  name: "Battery service",
+  interval: "Every 50 h",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["10 mm spanner", "Brush", "Distilled water", "Multimeter", "Terminal grease"],
+  parts: [
+    { label: "Distilled water", code: "as required" },
+  ],
+  steps: [
+    { t: "PPE: glasses and gloves. Battery acid burns skin and ruins eyes." },
+    { t: "Disconnect the NEGATIVE terminal first, then the positive.", tip: "Reverse order on reconnect: positive first, then negative." },
+    { t: "Inspect the case for cracks or bulging. Bulging = failing cell; replace." },
+    { t: "Non-sealed batteries: unscrew the cell caps. Electrolyte should cover the plates by ≈ 10 mm. Top up with DISTILLED water ONLY." },
+    { t: "Clean terminals: brush, then bicarb+water paste to neutralise corrosion. Rinse, dry. Smear petroleum jelly on post and clamp." },
+    { t: "Reconnect: positive first, negative last. Clamps firm but not crushed — lead is soft." },
+    { t: "Resting voltage (no load, hours after stop): ≥ 12.6 V healthy, 12.3 V tired, < 12.0 V failing." },
+    { t: "Charging voltage at idle: 13.8–14.4 V. Outside = alternator or regulator suspect." },
+    { t: "Winter lay-up: attach a smart trickle charger. Lead-acid hates sitting flat at low temperatures." },
+  ],
+};
+
+const PROC_COOLING_INSP = {
+  id: "cooling-insp",
+  tag: "I.03",
+  name: "Cooling system inspection",
+  interval: "Annually or every 200 h",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["Torch", "Soft brush", "Low-pressure air or water"],
+  parts: [],
+  steps: [
+    { t: "Engine cool. Inspect both radiator hoses end-to-end: swelling, oily film, cracks at clip ends, surface checking. Squeeze — spongy = lost plies, about to fail." },
+    { t: "Spring clips: replace any that do not return to shape when squeezed." },
+    { t: "Radiator core: blow chaff or insects from the ENGINE SIDE outwards with low-pressure air. Never run a wire through the fins." },
+    { t: "Radiator cap seal and pressure rating (0.9 bar typically). Hard or split seal = new cap." },
+    { t: "White crusty deposits at any hose joint or weep hole on the water pump = a slow coolant leak." },
+    { t: "With engine warm: feel the upper hose. A thump as the thermostat opens should be felt, then the hose stiffens. Never hot = stuck-closed thermostat." },
+  ],
+};
+
+const PROC_FUEL_INSP = {
+  id: "fuel-insp",
+  tag: "I.04",
+  name: "Fuel system inspection",
+  interval: "Annually or every 200 h",
+  time: "≈ 10 min",
+  difficulty: "Easy",
+  tools: ["Torch", "Clean rag"],
+  parts: [],
+  steps: [
+    { t: "Trace every rubber line from tank to filter to injection pump. Any line older than ten years should be replaced regardless of how it looks.", tip: "Modern diesel attacks aged rubber. The lines you cannot see are the ones that fail." },
+    { t: "Look for weeping at clips, swelling adjacent to clips, hairline cracks when flexed, or a sticky feel." },
+    { t: "Tank breather: a blocked breather creates vacuum and starves the engine on long runs." },
+    { t: "Drain the filter sediment bowl into a clear jar. Water sits as a separate layer below diesel. Water = check the tank cap and seals." },
+    { t: "High-pressure pipes (steel, pump → injectors): inspect for chafing where they cross brackets. Rub-marks = imminent failure." },
+    { t: "Mechanical lift-pump (on side of engine): inspect for diesel weeping at flange or shaft seal." },
+  ],
+};
+
+const PROC_INJECTORS = {
+  id: "injectors",
+  tag: "I.05",
+  name: "Injector check (pop-test)",
+  interval: "Every 400 h or on symptom",
+  time: "≈ 1 h to remove; specialist work to test",
+  difficulty: "Medium (sending out)",
+  tools: ["17 mm (clamp)", "14 mm + 17 mm flare-nut spanners", "Injector puller/slide-hammer"],
+  parts: [
+    { label: "Copper washers (×3)", code: "renew on refit" },
+    { label: "Pop-test service", code: "diesel specialist" },
+  ],
+  steps: [
+    { t: "Symptoms calling for this: lumpy idle, black smoke under load that doesn't clear with a new air filter, knock at idle, hard hot-starting." },
+    { t: "Engine cold. Brush and air-blow the area around each injector head meticulously — ANY grit dropped into the cylinder is catastrophic." },
+    { t: "Disconnect the leak-off pipe (small-bore) from the injector tops." },
+    { t: "Crack the high-pressure pipe unions at both ends (pump and injector) with a flare-nut/crow's-foot spanner. Cover open ports with clean rag the moment a pipe is free.", tip: "NEVER let an open HP pipe spray onto skin. At running pressure it will inject diesel into your bloodstream." },
+    { t: "Unbolt the injector clamp (17 mm, one bolt per injector). Lift the injector clear — gentle rocking or a small slide-hammer if stuck; never lever against alloy." },
+    { t: "Recover the copper washer from each injector seat. ALWAYS renew." },
+    { t: "Bag and label each injector by cylinder number. Take all three to a diesel specialist. Pop-test target: opens at ≈ 14.5 MPa (145 bar), fine atomised cone, no dribble." },
+    { t: "Refit: new copper washer, drop injector in, torque clamp bolt to 20 Nm. Reconnect HP pipes — flare nuts snug, then 1/6 turn." },
+    { t: "Bleed the fuel system as in F.02. Crank with throttle wide open. First start may be lumpy for a few seconds." },
+  ],
+};
+
+// ---- Torque + Troubleshooting --------------------------------------------
+const TORQUES = [
+  { item: "Sump drain plug", value: "30 Nm" },
+  { item: "Oil filter (after gasket contact)", value: "¾ turn by hand" },
+  { item: "HST drain plug", value: "50 Nm" },
+  { item: "HST suction-cover bolts", value: "22 Nm" },
+  { item: "Cylinder head bolts (cold)", value: "78 Nm in 3 stages" },
+  { item: "Rocker cover", value: "12 Nm" },
+  { item: "Injector clamp", value: "20 Nm" },
+  { item: "Glow plug", value: "20 Nm" },
+  { item: "Sprocket bolts (drive)", value: "100 Nm star pattern" },
+  { item: "Final-drive case to chassis", value: "140 Nm" },
+  { item: "ROPS / cab mounts", value: "80 Nm" },
+  { item: "Fan / alternator pivot", value: "45 Nm" },
+];
+
+const TROUBLES = [
+  { sym: "Won't start — cranks but no fire",
+    causes: ["Air in fuel system", "Glow plugs not heating", "Stale / waxed diesel", "Fuel-cut solenoid stuck"],
+    fix: "Bleed fuel (F.02). Test each glow plug at 12 V — should draw ≈ 8 A. Drain and refresh fuel."
+  },
+  { sym: "White smoke at start — clears warm",
+    causes: ["Cold engine, normal", "Failed glow plug", "Low compression in one cylinder"],
+    fix: "If persistent past 2 min, test glow-plug resistance (0.6–1.0 Ω). Compression test if isolated."
+  },
+  { sym: "Black smoke under load",
+    causes: ["Restricted air filter", "Dribbling injector", "Over-fuelling at the pump"],
+    fix: "Service air filter (F.03) first. Pop-test injectors (I.05) if smoke persists."
+  },
+  { sym: "HST creep at idle",
+    causes: ["Pump neutral mis-adjusted", "Worn swash-plate spring", "Linkage rod bent"],
+    fix: "Adjust neutral (A.03). If creep returns within hours, the pump itself needs attention."
+  },
+  { sym: "HST weak / sluggish forwards",
+    causes: ["Low HST fluid", "Suction filter blocked", "Worn pump or motor", "Charge pressure low"],
+    fix: "Check level cold. Service suction filter (F.04). Charge pressure test if no improvement."
+  },
+  { sym: "Track throws or jumps off sprocket",
+    causes: ["Track too loose", "Track too tight", "Bent idler frame", "Worn sprocket teeth"],
+    fix: "Re-tension to 10–25 mm sag (T.02). Inspect sprocket and idler (T.01). Frame damage = specialist."
+  },
+  { sym: "One track moves slower than the other",
+    causes: ["Pump neutral off on one side", "Charge pressure imbalance", "Worn motor on slower side"],
+    fix: "Swap motors L-R as a diagnostic — if the symptom follows the motor, the motor is at fault."
+  },
+  { sym: "Overheating",
+    causes: ["Radiator core blocked with chaff", "Failed thermostat stuck shut", "Slipping fan belt", "Low coolant"],
+    fix: "Blow rad from engine side. Replace thermostat. Tension belt. Flush system."
+  },
+  { sym: "Battery flat overnight",
+    causes: ["Parasitic draw", "Failed cell", "Alternator not charging"],
+    fix: "Resting V (> 12.5 V), idle charge V (13.8–14.4 V), pull fuses to find a draw."
+  },
+];
+
+// ==========================================================================
+// Building blocks
+// ==========================================================================
+
+function Procedure({ p, openByDefault = false }) {
+  const [open, setOpen] = React.useState(openByDefault);
+  const [checked, setChecked] = React.useState(() => p.steps.map(() => false));
+  const done = checked.filter(Boolean).length;
+  const pct = done / p.steps.length;
+
+  const toggle = (i) => setChecked(prev => prev.map((v, idx) => idx === i ? !v : v));
+  const reset = (e) => { e.stopPropagation(); setChecked(p.steps.map(() => false)); };
+
+  return (
+    <div className={"proc" + (open ? " open" : "")} id={p.id}>
+      <div className="proc-head" onClick={() => setOpen(o => !o)}>
+        <div className="proc-title">
+          <span className="proc-tag">{p.tag}</span>
+          <span className="proc-name">{p.name}</span>
+        </div>
+        <div className="proc-meta">
+          <span>⏱ <strong>{p.time}</strong></span>
+          <span>↻ <strong>{p.interval.split(" / ")[0].replace("Every ", "")}</strong></span>
+          <span className="proc-chev">▸</span>
+        </div>
+      </div>
+      <div className="proc-body">
+        <div className="grid grid-3" style={{marginBottom: 18}}>
+          <div className="stat"><div className="stat-label">Interval</div><div className="stat-value mono" style={{fontSize: 13}}>{p.interval}</div></div>
+          <div className="stat"><div className="stat-label">Time</div><div className="stat-value mono">{p.time}</div></div>
+          <div className="stat"><div className="stat-label">Difficulty</div><div className="stat-value" style={{fontSize: 15}}>{p.difficulty}</div></div>
+        </div>
+
+        {p.parts.length > 0 && (
+          <React.Fragment>
+            <h4>Parts</h4>
+            <div className="parts-strip">
+              {p.parts.map((pt, i) => (
+                <span className="part-pill" key={i}>
+                  <span className="label">{pt.label}</span>
+                  <span className="mono">{pt.code}</span>
+                </span>
+              ))}
+            </div>
+          </React.Fragment>
+        )}
+
+        <h4>Tools</h4>
+        <p style={{fontSize: 14, color: "var(--text-2)"}}>{p.tools.join(" · ")}</p>
+
+        <h4>Procedure</h4>
+        <div className="step-bar">
+          <div className="step-bar-progress" style={{"--p": pct}} />
+          <div className="step-bar-text">{done} / {p.steps.length} DONE</div>
+          <button onClick={reset}>Reset</button>
+        </div>
+
+        {p.steps.map((s, i) => (
+          <div key={i} className={"step" + (checked[i] ? " done" : "")}>
+            <button className={"step-check" + (checked[i] ? " done" : "")} onClick={() => toggle(i)} aria-label={"step " + (i+1)} />
+            <div className="step-body">
+              <div>
+                <span className="step-num mono">[{String(i+1).padStart(2, "0")}]</span>
+                <span className="step-text">{s.t}</span>
+              </div>
+              {s.tip && <div className="step-tip">{s.tip}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SecMarker({ num, tag, title }) {
+  return (
+    <div className="sec-marker">
+      <div className="sec-marker-num">{num}</div>
+      <div className="sec-marker-body">
+        <div className="sec-marker-tag">[{tag}]</div>
+        <h2 className="sec-marker-title">{title}</h2>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================================================
+// Sections
+// ==========================================================================
+
+function SectionOverview() {
+  return (
+    <section data-section="overview" data-screen-label="01 Specification">
+      <div className="hero">
+        <div className="hero-meta">
+          <span className="hero-pill hi">FIELD SERVICE</span>
+          <span className="hero-pill dim">EDITION · 2026 · UK</span>
+          <span className="hero-pill dim">CLASSIFICATION · WORKSHOP</span>
+        </div>
+        <h1 className="hero-title">
+          AC<span className="dot">·</span>18
+          <span className="reg">Tracked utility · Yanmar 3TNE74</span>
+        </h1>
+        <p className="hero-sub">
+          A field-service manual for the AC-18 — Yanmar's compact tracked utility tractor. Built around
+          the 3-cylinder 3TNE74 diesel and a twin-pump hydrostatic drive on rubber tracks. This guide
+          covers scheduled service, filter and HST procedures, track maintenance, UK parts sourcing,
+          torque values, and fault diagnosis.
+        </p>
+      </div>
+
+      <div className="hazard" style={{margin: "40px 0 0"}} />
+      <div className="meta-strip">
+        <div className="meta-cell"><div className="meta-k">Engine</div><div className="meta-v">3TNE74</div></div>
+        <div className="meta-cell"><div className="meta-k">Cylinders</div><div className="meta-v">3 · IDI Diesel</div></div>
+        <div className="meta-cell"><div className="meta-k">Power</div><div className="meta-v">18 HP / 13.4 kW</div></div>
+        <div className="meta-cell"><div className="meta-k">Rated</div><div className="meta-v">2600 RPM</div></div>
+        <div className="meta-cell"><div className="meta-k">Drive</div><div className="meta-v">Twin-Pump HST</div></div>
+        <div className="meta-cell"><div className="meta-k">Tracks</div><div className="meta-v">250 mm Rubber</div></div>
+      </div>
+
+      <h3>Working notes</h3>
+      <p>
+        The AC-18 is a Japanese-domestic-market compact tracked tractor: small, low-ground-pressure,
+        and well suited to soft pasture, slopes, and orchard rows where a wheeled tractor would rut.
+        Almost every example in the UK is a grey import, so service literature is patchy and parts
+        hunting requires cross-referencing the 3TNE74 engine family. Mechanically these are honest,
+        repairable machines — the HST is the most expensive thing on it, so look after the fluid.
+      </p>
+
+      <div className="callout warn">
+        <span className="callout-tag">[WARNING] · HOT &amp; PRESSURISED</span>
+        Park on level ground, parking brake set, both HST levers in neutral, key out before any work.
+        Allow the engine to cool before opening the cooling system or working on the exhaust.
+      </div>
+      <div className="callout danger">
+        <span className="callout-tag">[DANGER] · DIESEL INJECTION</span>
+        Never crack a high-pressure injector pipe with skin in the spray path. At 13,500+ kPa the
+        spray will inject diesel into your bloodstream — a medical emergency.
+      </div>
+      <div className="callout info">
+        <span className="callout-tag">[NOTE] · VERIFY BEFORE ORDERING</span>
+        Yanmar refined the AC-series across its run. Always cross-check part numbers against the
+        engine and chassis plates — particularly belts, gaskets, HST filters, and tracks.
+      </div>
+
+      <h3>Specification</h3>
+      <div className="specblock">
+        {Object.entries(SPECS).map(([k, v]) => (
+          <React.Fragment key={k}>
+            <div className="k">{k}</div>
+            <div className="v">{v}</div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      <h3>Capacities</h3>
+      <div className="grid grid-4">
+        {CAPACITIES.map((c, i) => (
+          <div className="stat" key={i}>
+            <div className="stat-label">{c.k}</div>
+            <div className="stat-value">{c.v}</div>
+            {c.t && <div className="stat-note">{c.t}</div>}
+          </div>
+        ))}
+      </div>
+
+      <h3>Fluids</h3>
+      <div className="table-scroll">
+        <table>
+          <thead><tr><th>Application</th><th>Specification</th><th>Notes</th></tr></thead>
+          <tbody>
+            {FLUIDS.map((f, i) => (
+              <tr key={i}>
+                <td style={{fontWeight: 600}}>{f.k}</td>
+                <td className="mono">{f.spec}</td>
+                <td style={{color: "var(--text-3)"}}>{f.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function SectionSchedule() {
+  return (
+    <section data-section="schedule" data-screen-label="02 Schedule">
+      <SecMarker num="02" tag="SECTION 02" title="Service Schedule" />
+      <p className="sec-lede">
+        Hour-based intervals from Yanmar's original tables for the 3TNE74. Whichever comes first —
+        hours on the clock or the calendar — drives the work. Click any task to jump to its procedure.
+      </p>
+
+      <div className="timeline">
+        {SCHEDULE.map((row, i) => (
+          <div className={"tl-row" + (row.major ? " major" : "")} key={i}>
+            <div className="tl-hours">
+              {row.hours.split(" / ")[0]}
+              {row.hours.includes("/") && <small>{row.hours.split(" / ").slice(1).join(" / ")}</small>}
+            </div>
+            <div className="tl-tasks">
+              {row.tasks.map((t, j) => (
+                <button
+                  className={"tl-task " + t.kind}
+                  key={j}
+                  onClick={() => {
+                    if (!t.link) return;
+                    const el = document.getElementById(t.link);
+                    if (el) {
+                      el.classList.add("open");
+                      const top = el.getBoundingClientRect().top + window.scrollY - 20;
+                      window.scrollTo({ top, behavior: "smooth" });
+                    }
+                  }}
+                >
+                  {t.kind === "replace" ? "↻ " : "✓ "}{t.t}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="callout">
+        <span className="callout-tag">[KEY]</span>
+        <strong style={{color: "var(--hi)"}}>Yellow pills</strong> are <strong>replace</strong> items;
+        dark pills are <strong>check / inspect</strong>. First-50-hour run-in is non-negotiable on a
+        freshly imported or rebuilt tractor — fresh machining swarf settles into the oil and HST
+        sump and must come out.
+      </div>
+    </section>
+  );
+}
+
+function SectionFilters() {
+  return (
+    <section data-section="filters" data-screen-label="03 Filters">
+      <SecMarker num="03" tag="SECTION 03" title="Filters & Fluids" />
+      <p className="sec-lede">
+        Four scheduled fluid systems on the AC-18: engine oil, fuel, air, and HST. Each procedure
+        below is self-contained — click to expand the steps and tick them off as you go.
+      </p>
+
+      <Procedure p={PROC_ENGINE_OIL} openByDefault={true} />
+      <Procedure p={PROC_FUEL} />
+      <Procedure p={PROC_AIR} />
+      <Procedure p={PROC_HST} />
+    </section>
+  );
+}
+
+function SectionTracks() {
+  return (
+    <section data-section="tracks" data-screen-label="04 Tracks">
+      <SecMarker num="04" tag="SECTION 04" title="Tracks" />
+      <p className="sec-lede">
+        The AC-18 lives or dies on its tracks. A track set is the single most expensive scheduled
+        item on the machine; the cheapest way to keep it cheap is correct tension, clean inspection,
+        and replacing sprockets and idlers before they chew a new track to pieces.
+      </p>
+
+      <div className="callout warn">
+        <span className="callout-tag">[FACT] · TIGHT IS WORSE THAN LOOSE</span>
+        Over-tensioned rubber tracks load the idler and sprocket bearings constantly and stretch
+        the steel cords inside the track. Spec sag is 10–25 mm at the top midpoint. When in doubt,
+        run slightly loose.
+      </div>
+
+      <Procedure p={PROC_TRACK_INSP} openByDefault={true} />
+      <Procedure p={PROC_TRACK_TENSION} />
+      <Procedure p={PROC_TRACK_BOLTS} />
+
+      <h3>Track wear indicators</h3>
+      <div className="grid grid-3">
+        <div className="stat">
+          <div className="stat-label">Lug height (new)</div>
+          <div className="stat-value">≈ 22 mm</div>
+          <div className="stat-note">Replace at ≤ 8 mm</div>
+        </div>
+        <div className="stat">
+          <div className="stat-label">Pitch stretch</div>
+          <div className="stat-value">&lt; 5 %</div>
+          <div className="stat-note">Measure over 10 pitches</div>
+        </div>
+        <div className="stat">
+          <div className="stat-label">Sprocket profile</div>
+          <div className="stat-value">Pointed</div>
+          <div className="stat-note">Hooked = replace pair</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SectionLube() {
+  return (
+    <section data-section="lube" data-screen-label="05 Lubrication & Cooling">
+      <SecMarker num="05" tag="SECTION 05" title="Lubrication & Cooling" />
+      <p className="sec-lede">
+        Greasing on a 50-hour cycle, coolant on a long interval. Skipping the grease costs you a
+        sprocket bearing; skipping the coolant costs you a head gasket.
+      </p>
+
+      <Procedure p={PROC_GREASE} openByDefault={true} />
+      <Procedure p={PROC_COOLANT} />
+
+      <h3>Greasing points · at a glance ({GREASE_POINTS.reduce((n, z) => n + z.points.length, 0)} total)</h3>
+      <div className="grid grid-2">
+        {GREASE_POINTS.map((g, i) => (
+          <div key={i} style={{padding: 14, background: "var(--panel)", border: "1px solid var(--rule)", borderLeft: "3px solid var(--hi)"}}>
+            <div style={{fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-3)", marginBottom: 8, fontWeight: 600}}>{g.zone}</div>
+            <ul style={{margin: 0, paddingLeft: 18, fontSize: 14, lineHeight: 1.7, color: "var(--text-2)"}}>
+              {g.points.map((p, j) => <li key={j}>{p}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SectionAdjustments() {
+  return (
+    <section data-section="adjustments" data-screen-label="06 Adjustments">
+      <SecMarker num="06" tag="SECTION 06" title="Adjustments" />
+      <p className="sec-lede">
+        Four adjustments keep the AC-18 honest: valves, fan belt, HST neutral, and the parking
+        brake. None require special tools beyond a feeler gauge and a torque wrench.
+      </p>
+
+      <Procedure p={PROC_VALVES} openByDefault={true} />
+      <Procedure p={PROC_FAN_BELT} />
+      <Procedure p={PROC_HST_NEUTRAL} />
+      <Procedure p={PROC_BRAKES} />
+    </section>
+  );
+}
+
+function SectionInspections() {
+  return (
+    <section data-section="inspections" data-screen-label="07 Inspections">
+      <SecMarker num="07" tag="SECTION 07" title="Inspections" />
+      <p className="sec-lede">
+        Walk-arounds and quick visual checks that catch failures before they strand you in a field.
+        Cheap to do, expensive to skip.
+      </p>
+
+      <Procedure p={PROC_DAILY} openByDefault={true} />
+      <Procedure p={PROC_BATTERY} />
+      <Procedure p={PROC_COOLING_INSP} />
+      <Procedure p={PROC_FUEL_INSP} />
+      <Procedure p={PROC_INJECTORS} />
+    </section>
+  );
+}
+
+function SectionParts() {
+  const [q, setQ] = React.useState("");
+  const [cat, setCat] = React.useState("All");
+  const filtered = PARTS.filter(p => {
+    if (cat !== "All" && p.cat !== cat) return false;
+    if (!q) return true;
+    const s = (p.name + " " + p.yanmar + " " + p.alts.join(" ") + " " + p.suppliers + " " + p.notes).toLowerCase();
+    return s.includes(q.toLowerCase());
+  });
+
+  return (
+    <section data-section="parts" data-screen-label="08 UK Parts">
+      <SecMarker num="08" tag="SECTION 08" title="UK Parts" />
+      <p className="sec-lede">
+        Yanmar part numbers alongside commonly-stocked UK aftermarket equivalents. Prices are
+        typical 2026 retail, excluding VAT and post; treat them as orientation only.
+      </p>
+
+      <div className="toolbar">
+        <input className="search-input" placeholder="Search parts, numbers, suppliers..." value={q} onChange={e => setQ(e.target.value)} />
+        <div className="filter-chips">
+          {PART_CATS.map(c => (
+            <button key={c} className={"chip" + (cat === c ? " on" : "")} onClick={() => setCat(c)}>{c}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{fontSize: 11, color: "var(--text-3)", marginBottom: 8, fontFamily: '"JetBrains Mono", monospace', letterSpacing: "0.12em"}}>
+        SHOWING {filtered.length} / {PARTS.length}
+      </div>
+
+      <div className="parts-table-wrap table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style={{width: "20%"}}>Part</th>
+              <th style={{width: "16%"}}>Yanmar №</th>
+              <th>UK aftermarket cross-refs</th>
+              <th style={{width: "12%"}}>Price (≈)</th>
+              <th style={{width: "16%"}}>Suppliers</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((p, i) => (
+              <tr key={i}>
+                <td>
+                  <div style={{fontWeight: 600}}>{p.name}</div>
+                  <div style={{fontSize: 11, color: "var(--text-3)", marginTop: 2}}>{p.cat}{p.notes && " · " + p.notes}</div>
+                </td>
+                <td className="mono">{p.yanmar}</td>
+                <td>
+                  <div style={{display: "flex", flexWrap: "wrap", gap: 4}}>
+                    {p.alts.map((a, j) => (
+                      <span key={j} className="mono" style={{fontSize: 12, padding: "2px 7px", background: "var(--bg)", border: "1px solid var(--rule)"}}>{a}</span>
+                    ))}
+                  </div>
+                </td>
+                <td className="mono">{p.price}</td>
+                <td style={{fontSize: 12, color: "var(--text-2)"}}>{p.suppliers}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="parts-cards">
+        {filtered.map((p, i) => (
+          <div className="pcard" key={i}>
+            <div className="pcard-head">
+              <div>
+                <div className="pcard-name">{p.name}</div>
+                {p.notes && <div className="pcard-notes">{p.notes}</div>}
+              </div>
+              <div className="pcard-cat">{p.cat}</div>
+            </div>
+            <div className="pcard-row">
+              <div className="k">Yanmar</div>
+              <div className="v mono">{p.yanmar}</div>
+            </div>
+            <div className="pcard-row">
+              <div className="k">UK alt</div>
+              <div className="v">
+                <div className="pcard-alts">
+                  {p.alts.map((a, j) => <span className="pcard-alt" key={j}>{a}</span>)}
+                </div>
+              </div>
+            </div>
+            <div className="pcard-row">
+              <div className="k">Price</div>
+              <div className="v mono">{p.price}</div>
+            </div>
+            <div className="pcard-row">
+              <div className="k">Source</div>
+              <div className="v" style={{fontSize: 12, color: "var(--text-2)"}}>{p.suppliers}</div>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div style={{padding: 24, textAlign: "center", color: "var(--text-3)", border: "1px dashed var(--rule)", fontSize: 13}}>
+            Nothing matches "{q}".
+          </div>
+        )}
+      </div>
+
+      <div className="callout info" style={{marginTop: 28}}>
+        <span className="callout-tag">[UK SUPPLIER SHORTLIST]</span>
+        <div className="grid grid-2" style={{gap: 6, marginTop: 6}}>
+          <div><strong>Malpas Online</strong> — strong on grey-import Yanmar / Iseki / Kubota.</div>
+          <div><strong>JapaneseTractorSpares.co.uk</strong> — compact-tractor specialists.</div>
+          <div><strong>MWE Tracks / Trackline / ITR UK</strong> — rubber tracks, idlers, sprockets.</div>
+          <div><strong>Sparex</strong> — general agri-replacement parts.</div>
+          <div><strong>Hifi Filter UK</strong> — direct cross-references by Yanmar number.</div>
+          <div><strong>Carrs Billington / Mole Valley Farmers</strong> — fluids and grease in bulk.</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SectionTorque() {
+  return (
+    <section data-section="torque" data-screen-label="09 Torque & Faults">
+      <SecMarker num="09" tag="SECTION 09" title="Torque & Faults" />
+      <p className="sec-lede">
+        A quick-reference torque card and a symptom-driven fault guide for the issues that put AC-18s
+        in the workshop most often.
+      </p>
+
+      <h3>Torque values</h3>
+      <div className="grid grid-2">
+        <div className="table-scroll">
+          <table>
+            <thead><tr><th>Fastener</th><th>Torque</th></tr></thead>
+            <tbody>
+              {TORQUES.slice(0, 6).map((t, i) => (
+                <tr key={i}><td>{t.item}</td><td className="mono">{t.value}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="table-scroll">
+          <table>
+            <thead><tr><th>Fastener</th><th>Torque</th></tr></thead>
+            <tbody>
+              {TORQUES.slice(6).map((t, i) => (
+                <tr key={i}><td>{t.item}</td><td className="mono">{t.value}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 style={{marginTop: 48}}>Troubleshooting</h3>
+      <div style={{display: "flex", flexDirection: "column", gap: 10}}>
+        {TROUBLES.map((tr, i) => (
+          <details key={i}>
+            <summary>
+              <span className="mono" style={{fontSize: 11, color: "var(--hi)", marginRight: 10, letterSpacing: "0.08em"}}>[T-{String(i+1).padStart(2,"0")}]</span>
+              {tr.sym}
+            </summary>
+            <div style={{marginTop: 14, fontSize: 14}}>
+              <div style={{display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10}}>
+                {tr.causes.map((c, j) => (
+                  <span key={j} style={{padding: "3px 9px", background: "var(--bg)", border: "1px solid var(--rule)", fontSize: 12, color: "var(--text-2)"}}>{c}</span>
+                ))}
+              </div>
+              <div style={{color: "var(--text-2)", lineHeight: 1.55}}>
+                <strong style={{color: "var(--hi)", fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: "0.16em"}}>APPROACH · </strong>
+                {tr.fix}
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <h3 style={{marginTop: 48}}>Service log</h3>
+      <ServiceLog />
+    </section>
+  );
+}
+
+function ServiceLog() {
+  const [rows, setRows] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem("ac18-log") || "[]"); }
+    catch { return []; }
+  });
+  const [draft, setDraft] = React.useState({date: "", hours: "", work: ""});
+
+  React.useEffect(() => {
+    localStorage.setItem("ac18-log", JSON.stringify(rows));
+  }, [rows]);
+
+  const add = () => {
+    if (!draft.date && !draft.hours && !draft.work) return;
+    setRows([{...draft, id: Date.now()}, ...rows]);
+    setDraft({date: "", hours: "", work: ""});
+  };
+  const del = (id) => setRows(rows.filter(r => r.id !== id));
+
+  return (
+    <div>
+      <p style={{fontSize: 14}}>A persistent service log lives in your browser. Useful for keeping track between visits; not a substitute for the paper book that lives with the tractor.</p>
+      <div className="log-grid">
+        <input className="search-input" placeholder="Date" value={draft.date} onChange={e => setDraft({...draft, date: e.target.value})}/>
+        <input className="search-input" placeholder="Hours" inputMode="numeric" value={draft.hours} onChange={e => setDraft({...draft, hours: e.target.value})}/>
+        <input className="search-input work" placeholder="Work carried out (oil & filter, track tension, etc.)" value={draft.work} onChange={e => setDraft({...draft, work: e.target.value})}/>
+        <button className="add" onClick={add} style={{padding: "12px 22px", background: "var(--hi)", color: "#0e110d", border: "none", cursor: "pointer", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 12, fontFamily: "inherit", fontWeight: 700}}>Add entry</button>
+      </div>
+      {rows.length > 0 ? (
+        <div className="table-scroll">
+          <table>
+            <thead><tr><th style={{width: 120}}>Date</th><th style={{width: 80}}>Hours</th><th>Work</th><th style={{width: 30}}></th></tr></thead>
+            <tbody>
+              {rows.map(r => (
+                <tr key={r.id}>
+                  <td className="mono">{r.date || "—"}</td>
+                  <td className="mono">{r.hours || "—"}</td>
+                  <td>{r.work}</td>
+                  <td><button onClick={() => del(r.id)} style={{background: "transparent", border: "none", color: "var(--text-3)", cursor: "pointer", fontSize: 20, padding: "4px 8px", minHeight: 32}}>×</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div style={{padding: 24, textAlign: "center", color: "var(--text-3)", border: "1px dashed var(--rule)", fontSize: 13}}>
+          No entries yet. Add the next service and it'll stick around until you clear your browser.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// expose
+Object.assign(window, {
+  SectionOverview, SectionSchedule, SectionFilters, SectionTracks,
+  SectionLube, SectionAdjustments, SectionInspections, SectionParts, SectionTorque,
+});
+
+</script>
+<script type="text/babel" data-presets="react">
+/* ===== ac18-app.jsx ===== */
+// ac18-app.jsx — AC-18 shell + nav + tweaks
+const { useState, useEffect } = React;
+
+const NAV = [
+  { id: "overview",     num: "01", label: "Specification" },
+  { id: "schedule",     num: "02", label: "Service schedule" },
+  { id: "filters",      num: "03", label: "Filters & fluids" },
+  { id: "tracks",       num: "04", label: "Tracks" },
+  { id: "lube",         num: "05", label: "Lubrication & cooling" },
+  { id: "adjustments",  num: "06", label: "Adjustments" },
+  { id: "inspections",  num: "07", label: "Inspections" },
+  { id: "parts",        num: "08", label: "UK parts" },
+  { id: "torque",       num: "09", label: "Torque & faults" },
+];
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#f4d20a",
+  "density": "comfortable"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [active, setActive] = useState("overview");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [tweaks, setTweak] = window.useTweaks
+    ? window.useTweaks(TWEAK_DEFAULTS)
+    : [TWEAK_DEFAULTS, () => {}];
+
+  // Apply accent
+  useEffect(() => {
+    document.documentElement.style.setProperty("--hi", tweaks.accent);
+  }, [tweaks.accent]);
+
+  // Density
+  useEffect(() => {
+    document.body.style.fontSize = tweaks.density === "compact" ? "14px" : tweaks.density === "spacious" ? "17px" : "15px";
+  }, [tweaks.density]);
+
+  // Lock body scroll when drawer open
+  useEffect(() => {
+    document.body.classList.toggle("no-scroll", drawerOpen);
+  }, [drawerOpen]);
+
+  // Escape closes drawer
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") setDrawerOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Scroll-spy
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0]) setActive(visible[0].target.dataset.section);
+    }, { rootMargin: "-10% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("section[data-section]").forEach(s => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  const goTo = (id) => {
+    setDrawerOpen(false);
+    requestAnimationFrame(() => {
+      const el = document.querySelector(`section[data-section="${id}"]`);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    });
+  };
+
+  const TweaksPanel = window.TweaksPanel;
+  const TweakSection = window.TweakSection;
+  const TweakRadio = window.TweakRadio;
+  const TweakColor = window.TweakColor;
+
+  const activeNav = NAV.find(n => n.id === active) || NAV[0];
+
+  return (
+    <div className="app">
+      <header className="topbar">
+        <div className="topbar-inner">
+          <div className="topbar-brand">
+            <div className="topbar-mark">AC<span className="dot">·</span>18</div>
+            <div className="topbar-meta">
+              FIELD SERVICE
+              <strong>{activeNav.label}</strong>
+            </div>
+          </div>
+          <button className="menu-btn" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <path d="M4 7h16M4 12h16M4 17h16"/>
+            </svg>
+          </button>
+        </div>
+        <div className="hazard topbar-hazard" />
+      </header>
+
+      <div className={"scrim" + (drawerOpen ? " show" : "")} onClick={() => setDrawerOpen(false)} />
+
+      <aside className={"rail" + (drawerOpen ? " open" : "")}>
+        <button className="rail-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+
+        <div className="brand">
+          <div className="brand-line">
+            <span className="brand-pill">YANMAR</span>
+            <span className="brand-pill alt">TRACKED</span>
+          </div>
+          <h1 className="brand-title">AC<span className="dot">·</span>18</h1>
+          <div className="brand-sub">
+            FIELD SERVICE MANUAL<br/>
+            3TNE74 · 18 HP · 13.4 kW<br/>
+            EDITION 2026 · UK
+          </div>
+        </div>
+
+        <div className="hazard-sm" />
+
+        <nav className="nav">
+          <div className="nav-group">CONTENTS</div>
+          {NAV.map(n => (
+            <button
+              key={n.id}
+              className={"nav-item" + (active === n.id ? " active" : "")}
+              onClick={() => goTo(n.id)}
+            >
+              <span className="num">{n.num}</span>
+              <span>{n.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="rail-foot">
+          GREY-IMPORT REFERENCE<br/>
+          VERIFY PART NUMBERS<br/>
+          AGAINST ENGINE PLATE<br/>
+          BEFORE ORDERING
+        </div>
+      </aside>
+
+      <main>
+        <div className="doc">
+          <SectionOverview />
+          <div style={{height: 64}}/>
+          <SectionSchedule />
+          <div style={{height: 64}}/>
+          <SectionFilters />
+          <div style={{height: 64}}/>
+          <SectionTracks />
+          <div style={{height: 64}}/>
+          <SectionLube />
+          <div style={{height: 64}}/>
+          <SectionAdjustments />
+          <div style={{height: 64}}/>
+          <SectionInspections />
+          <div style={{height: 64}}/>
+          <SectionParts />
+          <div style={{height: 64}}/>
+          <SectionTorque />
+        </div>
+      </main>
+
+      {TweaksPanel && (
+        <TweaksPanel title="Tweaks">
+          <TweakSection label="Accent">
+            <TweakColor
+              label="Colour"
+              value={tweaks.accent}
+              onChange={(v) => setTweak("accent", v)}
+              options={["#f4d20a", "#ff6b1a", "#5db3a3", "#e6e9dc"]}
+            />
+          </TweakSection>
+          <TweakSection label="Density">
+            <TweakRadio
+              label="Type"
+              value={tweaks.density}
+              onChange={(v) => setTweak("density", v)}
+              options={[
+                { value: "compact", label: "Compact" },
+                { value: "comfortable", label: "Normal" },
+                { value: "spacious", label: "Roomy" },
+              ]}
+            />
+          </TweakSection>
+        </TweaksPanel>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+
+</body>
+</html>
