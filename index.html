@@ -105,7 +105,9 @@
       border-bottom: 1px solid var(--rule);
     }
     .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding-bottom: 12px; }
-    .topbar-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; min-width: 0; cursor: pointer; user-select: none; transition: opacity .15s ease; }
+    .topbar-brand:hover { opacity: 0.75; }
+    .topbar-brand:focus-visible { outline: 2px solid var(--hi); outline-offset: 4px; border-radius: 2px; }
     .topbar-mark { font-family: "Archivo Black"; font-size: 22px; line-height: 1; letter-spacing: -0.02em; }
     .topbar-mark .dot { color: var(--hi); }
     .topbar-meta { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--text-3); letter-spacing: 0.14em; line-height: 1.4; }
@@ -2257,7 +2259,15 @@ function App() {
     <div className="app">
       <header className="topbar">
         <div className="topbar-inner">
-          <div className="topbar-brand">
+          <div
+            className="topbar-brand"
+            onClick={() => goTo("overview")}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goTo("overview"); } }}
+            role="button"
+            tabIndex={0}
+            title="Back to cover"
+            aria-label="Back to cover"
+          >
             <div className="topbar-mark">AC<span className="dot">·</span>18</div>
             <div className="topbar-meta">
               FIELD SERVICE
